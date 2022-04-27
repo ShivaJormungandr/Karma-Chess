@@ -5,6 +5,7 @@ namespace Karma_Chess
         public Form1()
         {
             InitializeComponent();
+            ////check
         }
     }
 }
