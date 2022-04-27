@@ -6,6 +6,7 @@ namespace Karma_Chess
         {
             InitializeComponent();
             ////check
+            //dublu check
         }
     }
 }
