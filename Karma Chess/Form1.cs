@@ -8,5 +8,10 @@ namespace Karma_Chess
             ////check
             //dublu check
         }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            Board board = new Board();
+        }
     }
 }
