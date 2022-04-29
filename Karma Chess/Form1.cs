@@ -2,7 +2,7 @@ namespace Karma_Chess
 {
     public partial class Form1 : Form
     {
-        Board board;
+        Board board = new Board();
         public Form1()
         {
             InitializeComponent();
@@ -12,12 +12,11 @@ namespace Karma_Chess
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            board = new Board();
         }
 
         private void btPrintBoard_Click(object sender, EventArgs e)
         {
-            board.FenToBoard("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
+            board.FenToBoard("rnbqkbnr/pppppppp/8/8/3P4/8/PPP1PPPP/RNBQKBNR w KQkq d3 5 1");
 
             tbTestBoard.Text += "-----------------------------------------\n";
             for (int i = 0; i < board.Squares.Length; i++)

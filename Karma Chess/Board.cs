@@ -1,14 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Karma_Chess
+﻿namespace Karma_Chess
 {
     public class Board
     {
         public Piece[] Squares;
+        public Turn Turn;
+        public Castling Castling;
+        //-1 For no target, 0-63 for EnPassant sqre target index
+        public int EnPassantTarget;
+        public int HalfmoveClock;
+        public int FullmoveNumber;
 
         public Board()
         {
@@ -20,6 +20,7 @@ namespace Karma_Chess
         {
             InitBlackPieces();
             InitWhitePieces();
+            InitFlags();
         }
 
         private void InitWhitePieces()
@@ -63,6 +64,18 @@ namespace Karma_Chess
             {
                 Squares[i] = Piece.Black | Piece.Pawn;
             }
+        }
+
+        private void InitFlags()
+        {
+            Turn = Turn.White;
+            Castling = Castling.BlackKingSide
+                    | Castling.BlackQueenSide
+                    | Castling.WhiteKingSide
+                    | Castling.WhiteQueenSide;
+            EnPassantTarget = -1;
+            HalfmoveClock = 0;
+            FullmoveNumber = 0;
         }
 
         public void FenToBoard(string fen)
@@ -133,13 +146,67 @@ namespace Karma_Chess
                         Squares[sqareCount] = Piece.White | Piece.King;
                         sqareCount++;
                         break;
-                     case '/':
+                    case '/':
                         break;
                     default:
                         throw new Exception("Illegal character in FEN.");
-                        break;
                 }
             }//pnbrqk
+
+            var flags = fen.Split(" ", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+            InitFlagsFen(flags[1..]);
+
+        }
+
+        private void InitFlagsFen(string[] flags)
+        {
+            var turn = flags[0].ToLower();
+            switch (turn)
+            {
+                case "w":
+                    Turn = Turn.White;
+                    break;
+                case "b":
+                    Turn = Turn.Black;
+                    break;
+            }
+
+            var castling = flags[1];
+
+            Castling = Castling.None;
+            foreach (char c in castling)
+            {
+                switch (c)
+                {
+                    case 'k':
+                        Castling = Castling | Castling.BlackKingSide;
+                        break;
+                    case 'K':
+                        Castling = Castling | Castling.WhiteKingSide;
+                        break;
+                    case 'q':
+                        Castling = Castling | Castling.BlackQueenSide;
+                        break;
+                    case 'Q':
+                        Castling = Castling | Castling.WhiteQueenSide;
+                        break;
+                    case '-':
+                    default:
+                        break;
+                }
+
+            }
+
+            EnPassantTarget = AlgebircToBoardIndex(flags[2].ToLower());
+            HalfmoveClock = int.Parse(flags[3]);
+            FullmoveNumber = int.Parse(flags[4]);
+        }
+        #endregion
+
+        #region Helper Methods
+        private int AlgebircToBoardIndex(string algebircNotation)
+        {
+            return (algebircNotation[0] - 96) + 8 * ((int)char.GetNumericValue(algebircNotation[1]) - 1) - 1;
         }
         #endregion
 
