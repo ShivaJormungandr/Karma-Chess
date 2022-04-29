@@ -8,11 +8,11 @@ namespace Karma_Chess
 {
     public class Board
     {
-        public byte[] Squares;
+        public Piece[] Squares;
 
         public Board()
         {
-            Squares = new byte[64];
+            Squares = new Piece[64];
 
             InitBlackPieces();
             InitWhitePieces();
@@ -29,135 +29,83 @@ namespace Karma_Chess
             // 48 49 50 51 52 53 54 55
             // 56 57 58 59 60 61 62 63
 
-            Squares[56] = (byte)Color.WHITE | (byte)Piece.ROOK;
-            Squares[57] = (byte)Color.WHITE | (byte)Piece.KNIGHT;
-            Squares[58] = (byte)Color.WHITE | (byte)Piece.BISHOP;
-            Squares[59] = (byte)Color.WHITE | (byte)Piece.KING;
-            Squares[60] = (byte)Color.WHITE | (byte)Piece.QUEEN;
-            Squares[61] = (byte)Color.WHITE | (byte)Piece.BISHOP;
-            Squares[62] = (byte)Color.WHITE | (byte)Piece.KNIGHT;
-            Squares[63] = (byte)Color.WHITE | (byte)Piece.ROOK;
+            Squares[56] = Piece.White | Piece.Rook;
+            Squares[57] = Piece.White | Piece.Knight;
+            Squares[58] = Piece.White | Piece.Bishop;
+            Squares[59] = Piece.White | Piece.King;
+            Squares[60] = Piece.White | Piece.Queen;
+            Squares[61] = Piece.White | Piece.Bishop;
+            Squares[62] = Piece.White | Piece.Knight;
+            Squares[63] = Piece.White | Piece.Rook;
 
             for (int i = 48; i < 56; i++)
             {
-                Squares[i] = (byte)Color.WHITE | (byte)Piece.PAWN;
+                Squares[i] = Piece.White | Piece.Pawn;
             }
         }
 
         private void InitBlackPieces()
         {
-            Squares[0] = (byte)Color.BLACK | (byte)Piece.ROOK;
-            Squares[1] = (byte)Color.BLACK | (byte)Piece.KNIGHT;
-            Squares[2] = (byte)Color.BLACK | (byte)Piece.BISHOP;
-            Squares[3] = (byte)Color.BLACK | (byte)Piece.KING;
-            Squares[4] = (byte)Color.BLACK | (byte)Piece.QUEEN;
-            Squares[5] = (byte)Color.BLACK | (byte)Piece.BISHOP;
-            Squares[6] = (byte)Color.BLACK | (byte)Piece.KNIGHT;
-            Squares[7] = (byte)Color.BLACK | (byte)Piece.ROOK;
+            Squares[0] = Piece.Black | Piece.Rook;
+            Squares[1] = Piece.Black | Piece.Knight;
+            Squares[2] = Piece.Black | Piece.Bishop;
+            Squares[3] = Piece.Black | Piece.King;
+            Squares[4] = Piece.Black | Piece.Queen;
+            Squares[5] = Piece.Black | Piece.Bishop;
+            Squares[6] = Piece.Black | Piece.Knight;
+            Squares[7] = Piece.Black | Piece.Rook;
 
             for (int i = 8; i < 16; i++)
             {
-                Squares[i] = (byte)Color.BLACK | (byte)Piece.PAWN;
+                Squares[i] = Piece.Black | Piece.Pawn;
             }
         }
 
         //astea sigur ne vor folosi aici sau in alta parte
 
-        public bool IsPieceBlack(byte piece)
+        public bool IsPieceBlack(Piece piece)
         {
-            if ((piece & 128) == 128)
-            {
-                return true;
-            }
-
-            return false;
+            return (piece & Piece.Black) == Piece.Black ? true : false;
         }
 
-        public bool IsPieceWhite(byte piece)
+        public bool IsPieceWhite(Piece piece)
         {
-            if ((piece & 64) == 64)
-            {
-                return true;
-            }
-
-            return false;
+            return (piece & Piece.White) == Piece.White ? true : false;
         }
 
-        public bool IsPieceKing(byte piece)
+        public bool IsPieceKing(Piece piece)
         {
-            if ((piece & 32) == 32)
-            {
-                return true;
-            }
-
-            return false;
+            return (piece & Piece.King) == Piece.King ? true : false;
         }
 
-        public bool IsPieceQueen(byte piece)
+        public bool IsPieceQueen(Piece piece)
         {
-            if ((piece & 16) == 16)
-            {
-                return true;
-            }
-
-            return false;
+            return (piece & Piece.Queen) == Piece.Queen ? true : false;
         }
 
-        public bool IsPieceBishop(byte piece)
+        public bool IsPieceBishop(Piece piece)
         {
-            if ((piece & 8) == 8)
-            {
-                return true;
-            }
+            return (piece & Piece.Bishop) == Piece.Bishop ? true : false;
 
-            return false;
         }
 
-        public bool IsPieceKnight(byte piece)
+        public bool IsPieceKnight(Piece piece)
         {
-            if ((piece & 4) == 4)
-            {
-                return true;
-            }
-
-            return false;
+            return (piece & Piece.Knight) == Piece.Knight ? true : false;
         }
 
-        public bool IsPieceRook(byte piece)
+        public bool IsPieceRook(Piece piece)
         {
-            if ((piece & 2) == 2)
-            {
-                return true;
-            }
-
-            return false;
+            return (piece & Piece.Rook) == Piece.Rook ? true : false;
         }
 
-        public bool IsPiecePawn(byte piece)
+        public bool IsPiecePawn(Piece piece)
         {
-            if ((piece & 1) == 1)
-            {
-                return true;
-            }
-
-            return false;
+            return (piece & Piece.Pawn) == Piece.Pawn ? true : false;
         }
-
-    }
-
-    public enum Color
-    {
-        BLACK = 128,
-        WHITE = 64,
-    }
-
-    public enum Piece
-    {
-        KING = 32,
-        QUEEN = 16,
-        BISHOP = 8,
-        KNIGHT = 4,
-        ROOK = 2,
-        PAWN = 1,
+        public bool IsPieceEmpty(Piece piece)
+        {
+            return piece == Piece.None;
+        }
     }
 }
