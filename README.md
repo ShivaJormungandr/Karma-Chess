@@ -1,5 +1,6 @@
 # Karma-Chess
 ## _Project for Uni Artificial Inteligence Course_
+[Karma Chess Rules](https://www.chessvariants.com/index/displayitem.php?itemid=karmazog)
 
 The Dream Team:
 - [Bogdan Veltan](https://github.com/bveltan)
