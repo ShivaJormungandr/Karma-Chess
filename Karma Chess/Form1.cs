@@ -17,11 +17,14 @@ namespace Karma_Chess
 
         private void btPrintBoard_Click(object sender, EventArgs e)
         {
+            board.FenToBoard("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
 
+            tbTestBoard.Text += "-----------------------------------------\n";
             for (int i = 0; i < board.Squares.Length; i++)
             {
-                tbTestBoard.Text += $"{board.Squares[i]} | ";
-                if ((i + 1) % 8 == 0) tbTestBoard.Text += "\n-----------------------------------------------\n";
+                if (i % 8 == 0) tbTestBoard.Text += "| ";
+                tbTestBoard.Text += $"{board.Squares[i].ToString()[..2]} | ";
+                if ((i + 1) % 8 == 0) tbTestBoard.Text += "\n-----------------------------------------\n";
             }
         }
     }

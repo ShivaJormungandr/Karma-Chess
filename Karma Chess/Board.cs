@@ -13,7 +13,11 @@ namespace Karma_Chess
         public Board()
         {
             Squares = new Piece[64];
+        }
 
+        #region Board Inits
+        public void InitStartBoard()
+        {
             InitBlackPieces();
             InitWhitePieces();
         }
@@ -61,8 +65,85 @@ namespace Karma_Chess
             }
         }
 
-        //astea sigur ne vor folosi aici sau in alta parte
+        public void FenToBoard(string fen)
+        {
+            Array.Clear(Squares, 0, Squares.Length);
+            int sqareCount = 0;
+            foreach (var c in fen)
+            {
+                if (sqareCount > 63) break;
+                switch (c)
+                {
+                    case '1':
+                    case '2':
+                    case '3':
+                    case '4':
+                    case '5':
+                    case '6':
+                    case '7':
+                    case '8':
+                        int emptyCount = (int)char.GetNumericValue(c);
+                        sqareCount += emptyCount;
+                        break;
+                    case 'p':
+                        Squares[sqareCount] = Piece.Black | Piece.Pawn;
+                        sqareCount++;
+                        break;
+                    case 'n':
+                        Squares[sqareCount] = Piece.Black | Piece.Knight;
+                        sqareCount++;
+                        break;
+                    case 'b':
+                        Squares[sqareCount] = Piece.Black | Piece.Bishop;
+                        sqareCount++;
+                        break;
+                    case 'r':
+                        Squares[sqareCount] = Piece.Black | Piece.Rook;
+                        sqareCount++;
+                        break;
+                    case 'q':
+                        Squares[sqareCount] = Piece.Black | Piece.Queen;
+                        sqareCount++;
+                        break;
+                    case 'k':
+                        Squares[sqareCount] = Piece.Black | Piece.King;
+                        sqareCount++;
+                        break;
+                    case 'P':
+                        Squares[sqareCount] = Piece.White | Piece.Pawn;
+                        sqareCount++;
+                        break;
+                    case 'N':
+                        Squares[sqareCount] = Piece.White | Piece.Knight;
+                        sqareCount++;
+                        break;
+                    case 'B':
+                        Squares[sqareCount] = Piece.White | Piece.Bishop;
+                        sqareCount++;
+                        break;
+                    case 'R':
+                        Squares[sqareCount] = Piece.White | Piece.Rook;
+                        sqareCount++;
+                        break;
+                    case 'Q':
+                        Squares[sqareCount] = Piece.White | Piece.Queen;
+                        sqareCount++;
+                        break;
+                    case 'K':
+                        Squares[sqareCount] = Piece.White | Piece.King;
+                        sqareCount++;
+                        break;
+                     case '/':
+                        break;
+                    default:
+                        throw new Exception("Illegal character in FEN.");
+                        break;
+                }
+            }//pnbrqk
+        }
+        #endregion
 
+        #region Piece Checks
         public bool IsPieceBlack(Piece piece)
         {
             return (piece & Piece.Black) == Piece.Black ? true : false;
@@ -103,9 +184,11 @@ namespace Karma_Chess
         {
             return (piece & Piece.Pawn) == Piece.Pawn ? true : false;
         }
+
         public bool IsPieceEmpty(Piece piece)
         {
             return piece == Piece.None;
         }
+        #endregion
     }
 }

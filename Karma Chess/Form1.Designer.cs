@@ -34,6 +34,7 @@
             // 
             // tbTestBoard
             // 
+            this.tbTestBoard.Font = new System.Drawing.Font("Cascadia Mono", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.tbTestBoard.Location = new System.Drawing.Point(11, 12);
             this.tbTestBoard.Name = "tbTestBoard";
             this.tbTestBoard.Size = new System.Drawing.Size(586, 410);
