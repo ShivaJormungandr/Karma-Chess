@@ -10,26 +10,83 @@ namespace Karma_Chess
     {
         public int[] positions = { 18, 87, 156, 225, 294, 363, 432, 501 };
 
-        public Piece(int x, int y, Form mask /* param: Pieces type */)
+        public Piece(int x, int y, Form mask, Pieces type)
         {
             PictureBox piece = new PictureBox();
-            /*
-             * 
-             * if(ispieceknight(type))
-             * {
-             *     daca e neagra
-             *     cu numele potrivit pt poza
-             *                 piece.Image = Image.FromFile(Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.FullName + "\\Resources\\knightB.png"); 
-             * 
-             * 
-             */
-            //piece.Image = Image.FromFile(Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.FullName + "\\Resources\\knightB.png");
+
+            if (IsPieceBishop(type))
+            {
+                if (IsPieceBlack(type))
+                {
+                    piece.Image = Image.FromFile(Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.FullName + "\\Resources\\bishopB.png");
+                }
+                else if (IsPieceWhite(type))
+                {
+                    piece.Image = Image.FromFile(Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.FullName + "\\Resources\\bishop.png");
+                }
+            }
+            else if (IsPieceRook(type))
+            {
+                if (IsPieceBlack(type))
+                {
+                    piece.Image = Image.FromFile(Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.FullName + "\\Resources\\rookB.png");
+                }
+                else if (IsPieceWhite(type))
+                {
+                    piece.Image = Image.FromFile(Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.FullName + "\\Resources\\rook.png");
+                }
+            }
+            else if (IsPieceKnight(type))
+            {
+                if (IsPieceBlack(type))
+                {
+                    piece.Image = Image.FromFile(Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.FullName + "\\Resources\\knightB.png");
+                }
+                else if (IsPieceWhite(type))
+                {
+                    piece.Image = Image.FromFile(Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.FullName + "\\Resources\\knight.png");
+                }
+            }
+            else if (IsPiecePawn(type))
+            {
+                if (IsPieceBlack(type))
+                {
+                    piece.Image = Image.FromFile(Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.FullName + "\\Resources\\pawnB.png");
+                }
+                else if (IsPieceWhite(type))
+                {
+                    piece.Image = Image.FromFile(Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.FullName + "\\Resources\\pawn.png");
+                }
+            }
+            else if (IsPieceQueen(type))
+            {
+                if (IsPieceBlack(type))
+                {
+                    piece.Image = Image.FromFile(Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.FullName + "\\Resources\\queenB.png");
+                }
+                else if (IsPieceWhite(type))
+                {
+                    piece.Image = Image.FromFile(Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.FullName + "\\Resources\\queen.png");
+                }
+            }
+            else if (IsPieceKing(type))
+            {
+                if (IsPieceBlack(type))
+                {
+                    piece.Image = Image.FromFile(Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.FullName + "\\Resources\\kingB.png");
+                }
+                else if (IsPieceWhite(type))
+                {
+                    piece.Image = Image.FromFile(Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.FullName + "\\Resources\\king.png");
+                }
+            }
+
             piece.Size = new Size(64, 64);
             piece.Location = new Point(positions[x], positions[y]);
+            //piece.Layout = ImageLayout.Center;
             piece.Visible = true;
             mask.Controls.Add(piece);
             piece.BringToFront();
-
         }
 
 

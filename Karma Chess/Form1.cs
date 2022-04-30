@@ -5,14 +5,13 @@ namespace Karma_Chess
         public Form1()
         {
             InitializeComponent();
-            ////check
-            //dublu check
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
             Board board = new Board(this);
-            //Piece x = new Piece(0,0,this);
+            board.InitStartBoard();
+            board.drawBoard();
         }
 
         //private void btPrintBoard_Click(object sender, EventArgs e)

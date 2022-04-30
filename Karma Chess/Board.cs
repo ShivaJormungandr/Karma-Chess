@@ -5,7 +5,7 @@
         public Pieces[] Squares;
         public Turn Turn;
         public Castling Castling;
-        //-1 For no target, 0-63 for EnPassant sqre target index
+        //-1 For no target, 0-63 for EnPassant spre target index
         public int EnPassantTarget;
         public int HalfmoveClock;
         public int FullmoveNumber;
@@ -23,6 +23,21 @@
             InitBlackPieces();
             InitWhitePieces();
             InitFlags();
+        }
+
+        public void drawBoard()
+        {
+            for (int i = 0; i<64; i++)
+            {
+                if (Squares[i] == Pieces.None)
+                {
+                    continue;
+                }
+
+                int x = i % 8;
+                int y = i / 8;
+                var piece = new Piece(x, y, Mask, Squares[i]);
+            }
         }
 
         private void InitWhitePieces()
