@@ -8,7 +8,7 @@ namespace Karma_Chess
 {
     public class Piece
     {
-        public int[] positions = { 18, 87, 156, 225, 294, 363, 432, 501 };
+        public int[] positions = { 6, 75, 144, 213, 282, 351, 420, 489 };
 
         public Piece(int x, int y, Form mask, Pieces type)
         {
@@ -80,9 +80,10 @@ namespace Karma_Chess
                     piece.Image = Image.FromFile(Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.FullName + "\\Resources\\king.png");
                 }
             }
-
+            
             piece.Size = new Size(64, 64);
             piece.Location = new Point(positions[x], positions[y]);
+            piece.BackColor=Color.Transparent;    
             //piece.Layout = ImageLayout.Center;
             piece.Visible = true;
             mask.Controls.Add(piece);
