@@ -28,18 +28,10 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.tbTestBoard = new System.Windows.Forms.RichTextBox();
             this.btPrintBoard = new System.Windows.Forms.Button();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
-            // 
-            // tbTestBoard
-            // 
-            this.tbTestBoard.Font = new System.Drawing.Font("Cascadia Mono", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.tbTestBoard.Location = new System.Drawing.Point(11, 12);
-            this.tbTestBoard.Name = "tbTestBoard";
-            this.tbTestBoard.Size = new System.Drawing.Size(586, 410);
-            this.tbTestBoard.TabIndex = 0;
-            this.tbTestBoard.Text = "";
             // 
             // btPrintBoard
             // 
@@ -49,25 +41,33 @@
             this.btPrintBoard.TabIndex = 1;
             this.btPrintBoard.Text = "PrintBoard";
             this.btPrintBoard.UseVisualStyleBackColor = true;
-            this.btPrintBoard.Click += new System.EventHandler(this.btPrintBoard_Click);
+            // 
+            // pictureBox1
+            // 
+            this.pictureBox1.Image = global::Karma_Chess.Properties.Resources.Chess_Board;
+            this.pictureBox1.Location = new System.Drawing.Point(12, 12);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(560, 560);
+            this.pictureBox1.TabIndex = 2;
+            this.pictureBox1.TabStop = false;
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.ClientSize = new System.Drawing.Size(861, 584);
+            this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.btPrintBoard);
-            this.Controls.Add(this.tbTestBoard);
             this.Name = "Form1";
             this.Text = "Form1";
             this.Load += new System.EventHandler(this.Form1_Load);
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
 
         }
 
         #endregion
-
-        private RichTextBox tbTestBoard;
         private Button btPrintBoard;
+        private PictureBox pictureBox1;
     }
 }

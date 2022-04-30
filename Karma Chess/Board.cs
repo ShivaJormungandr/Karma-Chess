@@ -2,17 +2,19 @@
 {
     public class Board
     {
-        public Piece[] Squares;
+        public Pieces[] Squares;
         public Turn Turn;
         public Castling Castling;
         //-1 For no target, 0-63 for EnPassant sqre target index
         public int EnPassantTarget;
         public int HalfmoveClock;
         public int FullmoveNumber;
+        public Form Mask;
 
-        public Board()
+        public Board(Form mask)
         {
-            Squares = new Piece[64];
+            Squares = new Pieces[64];
+            Mask = mask;
         }
 
         #region Board Inits
@@ -34,35 +36,35 @@
             // 48 49 50 51 52 53 54 55
             // 56 57 58 59 60 61 62 63
 
-            Squares[56] = Piece.White | Piece.Rook;
-            Squares[57] = Piece.White | Piece.Knight;
-            Squares[58] = Piece.White | Piece.Bishop;
-            Squares[59] = Piece.White | Piece.King;
-            Squares[60] = Piece.White | Piece.Queen;
-            Squares[61] = Piece.White | Piece.Bishop;
-            Squares[62] = Piece.White | Piece.Knight;
-            Squares[63] = Piece.White | Piece.Rook;
+            Squares[56] = Pieces.White | Pieces.Rook;
+            Squares[57] = Pieces.White | Pieces.Knight;
+            Squares[58] = Pieces.White | Pieces.Bishop;
+            Squares[59] = Pieces.White | Pieces.King;
+            Squares[60] = Pieces.White | Pieces.Queen;
+            Squares[61] = Pieces.White | Pieces.Bishop;
+            Squares[62] = Pieces.White | Pieces.Knight;
+            Squares[63] = Pieces.White | Pieces.Rook;
 
             for (int i = 48; i < 56; i++)
             {
-                Squares[i] = Piece.White | Piece.Pawn;
+                Squares[i] = Pieces.White | Pieces.Pawn;
             }
         }
 
         private void InitBlackPieces()
         {
-            Squares[0] = Piece.Black | Piece.Rook;
-            Squares[1] = Piece.Black | Piece.Knight;
-            Squares[2] = Piece.Black | Piece.Bishop;
-            Squares[3] = Piece.Black | Piece.King;
-            Squares[4] = Piece.Black | Piece.Queen;
-            Squares[5] = Piece.Black | Piece.Bishop;
-            Squares[6] = Piece.Black | Piece.Knight;
-            Squares[7] = Piece.Black | Piece.Rook;
+            Squares[0] = Pieces.Black | Pieces.Rook;
+            Squares[1] = Pieces.Black | Pieces.Knight;
+            Squares[2] = Pieces.Black | Pieces.Bishop;
+            Squares[3] = Pieces.Black | Pieces.King;
+            Squares[4] = Pieces.Black | Pieces.Queen;
+            Squares[5] = Pieces.Black | Pieces.Bishop;
+            Squares[6] = Pieces.Black | Pieces.Knight;
+            Squares[7] = Pieces.Black | Pieces.Rook;
 
             for (int i = 8; i < 16; i++)
             {
-                Squares[i] = Piece.Black | Piece.Pawn;
+                Squares[i] = Pieces.Black | Pieces.Pawn;
             }
         }
 
@@ -99,51 +101,51 @@
                         sqareCount += emptyCount;
                         break;
                     case 'p':
-                        Squares[sqareCount] = Piece.Black | Piece.Pawn;
+                        Squares[sqareCount] = Pieces.Black | Pieces.Pawn;
                         sqareCount++;
                         break;
                     case 'n':
-                        Squares[sqareCount] = Piece.Black | Piece.Knight;
+                        Squares[sqareCount] = Pieces.Black | Pieces.Knight;
                         sqareCount++;
                         break;
                     case 'b':
-                        Squares[sqareCount] = Piece.Black | Piece.Bishop;
+                        Squares[sqareCount] = Pieces.Black | Pieces.Bishop;
                         sqareCount++;
                         break;
                     case 'r':
-                        Squares[sqareCount] = Piece.Black | Piece.Rook;
+                        Squares[sqareCount] = Pieces.Black | Pieces.Rook;
                         sqareCount++;
                         break;
                     case 'q':
-                        Squares[sqareCount] = Piece.Black | Piece.Queen;
+                        Squares[sqareCount] = Pieces.Black | Pieces.Queen;
                         sqareCount++;
                         break;
                     case 'k':
-                        Squares[sqareCount] = Piece.Black | Piece.King;
+                        Squares[sqareCount] = Pieces.Black | Pieces.King;
                         sqareCount++;
                         break;
                     case 'P':
-                        Squares[sqareCount] = Piece.White | Piece.Pawn;
+                        Squares[sqareCount] = Pieces.White | Pieces.Pawn;
                         sqareCount++;
                         break;
                     case 'N':
-                        Squares[sqareCount] = Piece.White | Piece.Knight;
+                        Squares[sqareCount] = Pieces.White | Pieces.Knight;
                         sqareCount++;
                         break;
                     case 'B':
-                        Squares[sqareCount] = Piece.White | Piece.Bishop;
+                        Squares[sqareCount] = Pieces.White | Pieces.Bishop;
                         sqareCount++;
                         break;
                     case 'R':
-                        Squares[sqareCount] = Piece.White | Piece.Rook;
+                        Squares[sqareCount] = Pieces.White | Pieces.Rook;
                         sqareCount++;
                         break;
                     case 'Q':
-                        Squares[sqareCount] = Piece.White | Piece.Queen;
+                        Squares[sqareCount] = Pieces.White | Pieces.Queen;
                         sqareCount++;
                         break;
                     case 'K':
-                        Squares[sqareCount] = Piece.White | Piece.King;
+                        Squares[sqareCount] = Pieces.White | Pieces.King;
                         sqareCount++;
                         break;
                     case '/':
@@ -210,52 +212,5 @@
         }
         #endregion
 
-        #region Piece Checks
-        public bool IsPieceBlack(Piece piece)
-        {
-            return (piece & Piece.Black) == Piece.Black ? true : false;
-        }
-
-        public bool IsPieceWhite(Piece piece)
-        {
-            return (piece & Piece.White) == Piece.White ? true : false;
-        }
-
-        public bool IsPieceKing(Piece piece)
-        {
-            return (piece & Piece.King) == Piece.King ? true : false;
-        }
-
-        public bool IsPieceQueen(Piece piece)
-        {
-            return (piece & Piece.Queen) == Piece.Queen ? true : false;
-        }
-
-        public bool IsPieceBishop(Piece piece)
-        {
-            return (piece & Piece.Bishop) == Piece.Bishop ? true : false;
-
-        }
-
-        public bool IsPieceKnight(Piece piece)
-        {
-            return (piece & Piece.Knight) == Piece.Knight ? true : false;
-        }
-
-        public bool IsPieceRook(Piece piece)
-        {
-            return (piece & Piece.Rook) == Piece.Rook ? true : false;
-        }
-
-        public bool IsPiecePawn(Piece piece)
-        {
-            return (piece & Piece.Pawn) == Piece.Pawn ? true : false;
-        }
-
-        public bool IsPieceEmpty(Piece piece)
-        {
-            return piece == Piece.None;
-        }
-        #endregion
     }
 }

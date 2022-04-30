@@ -6,8 +6,84 @@ using System.Threading.Tasks;
 
 namespace Karma_Chess
 {
+    public class Piece
+    {
+        public int[] positions = { 18, 87, 156, 225, 294, 363, 432, 501 };
+
+        public Piece(int x, int y, Form mask /* param: Pieces type */)
+        {
+            PictureBox piece = new PictureBox();
+            /*
+             * 
+             * if(ispieceknight(type))
+             * {
+             *     daca e neagra
+             *     cu numele potrivit pt poza
+             *                 piece.Image = Image.FromFile(Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.FullName + "\\Resources\\knightB.png"); 
+             * 
+             * 
+             */
+            //piece.Image = Image.FromFile(Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.FullName + "\\Resources\\knightB.png");
+            piece.Size = new Size(64, 64);
+            piece.Location = new Point(positions[x], positions[y]);
+            piece.Visible = true;
+            mask.Controls.Add(piece);
+            piece.BringToFront();
+
+        }
+
+
+        #region Piece Checks
+        public bool IsPieceBlack(Pieces piece)
+        {
+            return (piece & Pieces.Black) == Pieces.Black ? true : false;
+        }
+
+        public bool IsPieceWhite(Pieces piece)
+        {
+            return (piece & Pieces.White) == Pieces.White ? true : false;
+        }
+
+        public bool IsPieceKing(Pieces piece)
+        {
+            return (piece & Pieces.King) == Pieces.King ? true : false;
+        }
+
+        public bool IsPieceQueen(Pieces piece)
+        {
+            return (piece & Pieces.Queen) == Pieces.Queen ? true : false;
+        }
+
+        public bool IsPieceBishop(Pieces piece)
+        {
+            return (piece & Pieces.Bishop) == Pieces.Bishop ? true : false;
+
+        }
+
+        public bool IsPieceKnight(Pieces piece)
+        {
+            return (piece & Pieces.Knight) == Pieces.Knight ? true : false;
+        }
+
+        public bool IsPieceRook(Pieces piece)
+        {
+            return (piece & Pieces.Rook) == Pieces.Rook ? true : false;
+        }
+
+        public bool IsPiecePawn(Pieces piece)
+        {
+            return (piece & Pieces.Pawn) == Pieces.Pawn ? true : false;
+        }
+
+        public bool IsPieceEmpty(Pieces piece)
+        {
+            return piece == Pieces.None;
+        }
+        #endregion
+    }
+
     [Flags]
-    public enum Piece
+    public enum Pieces
     {
         None =      0b00000000,
         Pawn =      0b00000001,
