@@ -18,7 +18,8 @@ namespace Karma_Chess
                     {
                         continue;
                     }
-                    var piece = new DrawPiece(x, y, form, board.Squares[x, y]);
+
+                    _ = new DrawPiece(x, y, form, board.Squares[x, y]);
                 }
             }
         }
