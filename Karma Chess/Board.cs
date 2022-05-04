@@ -2,7 +2,7 @@
 {
     public class Board
     {
-        public int[] positions = { 6, 75, 144, 213, 282, 351, 420, 489, 558 };
+        public int[] positions = { 6, 75, 144, 213, 282, 351, 420, 489 };
 
         public Pieces[,] Squares;
         public Turn Turn;
@@ -21,27 +21,6 @@
 
         public void ReceiveClickedPiece(int x, int y)
         {
-            int? Xpositions = null;
-            int? Ypositions = null;
-
-            for (int i = 0; i < 8; i++)
-            {
-                if (x >= positions[i] && x < positions[i + 1])
-                {
-                    Xpositions = i;
-                }
-            }
-            for (int i = 0; i < 8; i++)
-            {
-                if (y >= positions[i] && y < positions[i + 1])
-                {
-                    Ypositions = i;
-                }
-            }
-            if (Xpositions != null && Ypositions != null)
-            {
-                var clickedPiece = Squares[(int)Xpositions, (int)Ypositions];
-            }
 
         }
 
@@ -134,7 +113,7 @@
                 if (XCount > 7)
                 {
                     YCount++;
-                    if (XCount > 7)
+                    if(XCount > 7)
                     {
                         break;
                     }

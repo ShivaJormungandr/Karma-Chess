@@ -13,20 +13,11 @@ namespace Karma_Chess
             board = new Board(this);
             board.InitStartBoard();
             board.drawBoard();
-            SetupClickEvents(Controls);
         }
 
-        private void SetupClickEvents(Control.ControlCollection controls)
+        private void Form1_MouseClick(object sender, MouseEventArgs e)
         {
-            foreach (Control control in controls)
-            {
-                control.Click += HandleClicks;
-            }
-        }
-        private void HandleClicks(object sender, EventArgs e)
-        {
-            var control = (PictureBox)sender;
-            board.ReceiveClickedPiece(control.Location.X, control.Location.Y);
+            board.ReceiveClickedPiece(e.X, e.Y);
         }
 
         //private void btPrintBoard_Click(object sender, EventArgs e)
