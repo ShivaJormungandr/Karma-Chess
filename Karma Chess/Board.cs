@@ -28,35 +28,35 @@
         private void InitWhitePieces()
         {
 
-            Squares[0, 7] = Pieces.White | Pieces.Rook;
-            Squares[1, 7] = Pieces.White | Pieces.Knight;
-            Squares[2, 7] = Pieces.White | Pieces.Bishop;
-            Squares[3, 7] = Pieces.White | Pieces.King;
-            Squares[4, 7] = Pieces.White | Pieces.Queen;
-            Squares[5, 7] = Pieces.White | Pieces.Bishop;
-            Squares[6, 7] = Pieces.White | Pieces.Knight;
-            Squares[7, 7] = Pieces.White | Pieces.Rook;
+            Squares[0, 0] = Pieces.White | Pieces.Rook;
+            Squares[1, 0] = Pieces.White | Pieces.Knight;
+            Squares[2, 0] = Pieces.White | Pieces.Bishop;
+            Squares[3, 0] = Pieces.White | Pieces.King;
+            Squares[4, 0] = Pieces.White | Pieces.Queen;
+            Squares[5, 0] = Pieces.White | Pieces.Bishop;
+            Squares[6, 0] = Pieces.White | Pieces.Knight;
+            Squares[7, 0] = Pieces.White | Pieces.Rook;
 
             for (int i = 0; i < 8; i++)
             {
-                Squares[i, 6] = Pieces.White | Pieces.Pawn;
+                Squares[i, 1] = Pieces.White | Pieces.Pawn;
             }
         }
 
         private void InitBlackPieces()
         {
-            Squares[0, 0] = Pieces.Black | Pieces.Rook;
-            Squares[1, 0] = Pieces.Black | Pieces.Knight;
-            Squares[2, 0] = Pieces.Black | Pieces.Bishop;
-            Squares[3, 0] = Pieces.Black | Pieces.King;
-            Squares[4, 0] = Pieces.Black | Pieces.Queen;
-            Squares[5, 0] = Pieces.Black | Pieces.Bishop;
-            Squares[6, 0] = Pieces.Black | Pieces.Knight;
-            Squares[7, 0] = Pieces.Black | Pieces.Rook;
+            Squares[0, 7] = Pieces.Black | Pieces.Rook;
+            Squares[1, 7] = Pieces.Black | Pieces.Knight;
+            Squares[2, 7] = Pieces.Black | Pieces.Bishop;
+            Squares[3, 7] = Pieces.Black | Pieces.King;
+            Squares[4, 7] = Pieces.Black | Pieces.Queen;
+            Squares[5, 7] = Pieces.Black | Pieces.Bishop;
+            Squares[6, 7] = Pieces.Black | Pieces.Knight;
+            Squares[7, 7] = Pieces.Black | Pieces.Rook;
 
             for (int i = 0; i < 8; i++)
             {
-                Squares[i, 1] = Pieces.Black | Pieces.Pawn;
+                Squares[i, 6] = Pieces.Black | Pieces.Pawn;
             }
         }
 
@@ -75,15 +75,15 @@
         public void FenToBoard(string fen)
         {
             Array.Clear(Squares, 0, Squares.Length);
-            int XCount = 0;
-            int YCount = 0;
+            int XCount = 7;
+            int YCount = 7;
             foreach (var c in fen)
             {
-                if (XCount > 7)
+                if (XCount < 0)
                 {
-                    YCount++;
-                    XCount = 0;
-                    if (YCount > 7)
+                    YCount--;
+                    XCount = 7;
+                    if (YCount < 0)
                     {
                         break;
                     }
@@ -100,55 +100,55 @@
                     case '7':
                     case '8':
                         int emptyCount = (int)char.GetNumericValue(c);
-                        XCount += emptyCount;
+                        XCount -= emptyCount;
                         break;
                     case 'p':
                         Squares[XCount, YCount] = Pieces.Black | Pieces.Pawn;
-                        XCount++;
+                        XCount--;
                         break;
                     case 'n':
                         Squares[XCount, YCount] = Pieces.Black | Pieces.Knight;
-                        XCount++;
+                        XCount--;
                         break;
                     case 'b':
                         Squares[XCount, YCount] = Pieces.Black | Pieces.Bishop;
-                        XCount++;
+                        XCount--;
                         break;
                     case 'r':
                         Squares[XCount, YCount] = Pieces.Black | Pieces.Rook;
-                        XCount++;
+                        XCount--;
                         break;
                     case 'q':
                         Squares[XCount, YCount] = Pieces.Black | Pieces.Queen;
-                        XCount++;
+                        XCount--;
                         break;
                     case 'k':
                         Squares[XCount, YCount] = Pieces.Black | Pieces.King;
-                        XCount++;
+                        XCount--;
                         break;
                     case 'P':
                         Squares[XCount, YCount] = Pieces.White | Pieces.Pawn;
-                        XCount++;
+                        XCount--;
                         break;
                     case 'N':
                         Squares[XCount, YCount] = Pieces.White | Pieces.Knight;
-                        XCount++;
+                        XCount--;
                         break;
                     case 'B':
                         Squares[XCount, YCount] = Pieces.White | Pieces.Bishop;
-                        XCount++;
+                        XCount--;
                         break;
                     case 'R':
                         Squares[XCount, YCount] = Pieces.White | Pieces.Rook;
-                        XCount++;
+                        XCount--;
                         break;
                     case 'Q':
                         Squares[XCount, YCount] = Pieces.White | Pieces.Queen;
-                        XCount++;
+                        XCount--;
                         break;
                     case 'K':
                         Squares[XCount, YCount] = Pieces.White | Pieces.King;
-                        XCount++;
+                        XCount--;
                         break;
                     case '/':
                         break;
