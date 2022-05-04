@@ -11,8 +11,7 @@
         public int FullmoveNumber;
         public List<(int from, int to, int promote)> PseudoLegalMoves;
 
-
-        public Board(Form mask)
+        public Board()
         {
             Squares = new Pieces[8, 8];
             PseudoLegalMoves = new List<(int from, int to, int promote)>();
