@@ -6,7 +6,7 @@
         public Turn Turn;
         public Castling Castling;
         //-1 For no target, 0-63 for EnPassant spre target index
-        public int EnPassantTarget;
+        public (int, int) EnPassantTarget;
         public int HalfmoveClock;
         public int FullmoveNumber;
         public List<(int from, int to, int promote)> PseudoLegalMoves;
@@ -67,7 +67,7 @@
                     | Castling.BlackQueenSide
                     | Castling.WhiteKingSide
                     | Castling.WhiteQueenSide;
-            EnPassantTarget = -1;
+            EnPassantTarget = (-1, -1);
             HalfmoveClock = 0;
             FullmoveNumber = 0;
         }
@@ -203,7 +203,7 @@
 
             if (flags[2].Equals("-"))
             {
-                EnPassantTarget = -1;
+                EnPassantTarget = (-1, -1);
             }
             else
             {
@@ -216,9 +216,11 @@
 
         #region Helper Methods
 
-        private int AlgebircToBoardIndex(string algebircNotation)
+        private (int, int) AlgebircToBoardIndex(string algebircNotation)
         {
-            return (algebircNotation[0] - 96) + 8 * ((int)char.GetNumericValue(algebircNotation[1]) - 1) - 1;
+            int file = algebircNotation[0] - 97;
+            int rank = (int)char.GetNumericValue(algebircNotation[1]) - 1;
+            return (file, rank);
         }
 
         #endregion
@@ -229,7 +231,7 @@
         /// <param name="from"></param>
         /// <param name="to"></param>
         /// <returns></returns>
-        public bool Move(int from, int to)
+        public bool Move(int from, int to, int Promote)
         {
             if (from < 0 || from > 63 || to < 0 || to > 63) return false;
             return false;
