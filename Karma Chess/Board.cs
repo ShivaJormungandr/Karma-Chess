@@ -18,11 +18,6 @@
             PseudoLegalMoves = new List<(int from, int to, int promote)>();
         }
 
-        public void ReceiveClickedPiece(int x, int y)
-        {
-
-        }
-
         #region Board Inits
         public void InitStartBoard()
         {
