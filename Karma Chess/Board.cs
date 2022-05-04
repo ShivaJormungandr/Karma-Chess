@@ -2,7 +2,9 @@
 {
     public class Board
     {
-        public Pieces[] Squares;
+        public int[] positions = { 6, 75, 144, 213, 282, 351, 420, 489 };
+
+        public Pieces[,] Squares;
         public Turn Turn;
         public Castling Castling;
         //-1 For no target, 0-63 for EnPassant spre target index
@@ -13,8 +15,13 @@
 
         public Board(Form mask)
         {
-            Squares = new Pieces[64];
+            Squares = new Pieces[8, 8];
             Mask = mask;
+        }
+
+        public void ReceiveClickedPiece(int x, int y)
+        {
+
         }
 
         #region Board Inits
@@ -27,16 +34,17 @@
 
         public void drawBoard()
         {
-            for (int i = 0; i<64; i++)
+            for (int x = 0; x < 8; x++)
             {
-                if (Squares[i] == Pieces.None)
+                for (int y = 0; y < 8; y++)
                 {
-                    continue;
-                }
+                    if (Squares[x, y] == Pieces.None)
+                    {
+                        continue;
+                    }
 
-                int x = i % 8;
-                int y = i / 8;
-                var piece = new Piece(x, y, Mask, Squares[i]);
+                    var piece = new Piece(x, y, Mask, Squares[x, y]);
+                }
             }
         }
 
@@ -51,35 +59,35 @@
             // 48 49 50 51 52 53 54 55
             // 56 57 58 59 60 61 62 63
 
-            Squares[56] = Pieces.White | Pieces.Rook;
-            Squares[57] = Pieces.White | Pieces.Knight;
-            Squares[58] = Pieces.White | Pieces.Bishop;
-            Squares[59] = Pieces.White | Pieces.King;
-            Squares[60] = Pieces.White | Pieces.Queen;
-            Squares[61] = Pieces.White | Pieces.Bishop;
-            Squares[62] = Pieces.White | Pieces.Knight;
-            Squares[63] = Pieces.White | Pieces.Rook;
+            Squares[0, 7] = Pieces.White | Pieces.Rook;
+            Squares[1, 7] = Pieces.White | Pieces.Knight;
+            Squares[2, 7] = Pieces.White | Pieces.Bishop;
+            Squares[3, 7] = Pieces.White | Pieces.King;
+            Squares[4, 7] = Pieces.White | Pieces.Queen;
+            Squares[5, 7] = Pieces.White | Pieces.Bishop;
+            Squares[6, 7] = Pieces.White | Pieces.Knight;
+            Squares[7, 7] = Pieces.White | Pieces.Rook;
 
-            for (int i = 48; i < 56; i++)
+            for (int i = 0; i < 8; i++)
             {
-                Squares[i] = Pieces.White | Pieces.Pawn;
+                Squares[i, 6] = Pieces.White | Pieces.Pawn;
             }
         }
 
         private void InitBlackPieces()
         {
-            Squares[0] = Pieces.Black | Pieces.Rook;
-            Squares[1] = Pieces.Black | Pieces.Knight;
-            Squares[2] = Pieces.Black | Pieces.Bishop;
-            Squares[3] = Pieces.Black | Pieces.King;
-            Squares[4] = Pieces.Black | Pieces.Queen;
-            Squares[5] = Pieces.Black | Pieces.Bishop;
-            Squares[6] = Pieces.Black | Pieces.Knight;
-            Squares[7] = Pieces.Black | Pieces.Rook;
+            Squares[0, 0] = Pieces.Black | Pieces.Rook;
+            Squares[1, 0] = Pieces.Black | Pieces.Knight;
+            Squares[2, 0] = Pieces.Black | Pieces.Bishop;
+            Squares[3, 0] = Pieces.Black | Pieces.King;
+            Squares[4, 0] = Pieces.Black | Pieces.Queen;
+            Squares[5, 0] = Pieces.Black | Pieces.Bishop;
+            Squares[6, 0] = Pieces.Black | Pieces.Knight;
+            Squares[7, 0] = Pieces.Black | Pieces.Rook;
 
-            for (int i = 8; i < 16; i++)
+            for (int i = 0; i < 8; i++)
             {
-                Squares[i] = Pieces.Black | Pieces.Pawn;
+                Squares[i, 1] = Pieces.Black | Pieces.Pawn;
             }
         }
 
@@ -98,10 +106,18 @@
         public void FenToBoard(string fen)
         {
             Array.Clear(Squares, 0, Squares.Length);
-            int sqareCount = 0;
+            int XCount = 0;
+            int YCount = 0;
             foreach (var c in fen)
             {
-                if (sqareCount > 63) break;
+                if (XCount > 7)
+                {
+                    YCount++;
+                    if(XCount > 7)
+                    {
+                        break;
+                    }
+                }
                 switch (c)
                 {
                     case '1':
@@ -113,55 +129,55 @@
                     case '7':
                     case '8':
                         int emptyCount = (int)char.GetNumericValue(c);
-                        sqareCount += emptyCount;
+                        XCount += emptyCount;
                         break;
                     case 'p':
-                        Squares[sqareCount] = Pieces.Black | Pieces.Pawn;
-                        sqareCount++;
+                        Squares[XCount, YCount] = Pieces.Black | Pieces.Pawn;
+                        XCount++;
                         break;
                     case 'n':
-                        Squares[sqareCount] = Pieces.Black | Pieces.Knight;
-                        sqareCount++;
+                        Squares[XCount, YCount] = Pieces.Black | Pieces.Knight;
+                        XCount++;
                         break;
                     case 'b':
-                        Squares[sqareCount] = Pieces.Black | Pieces.Bishop;
-                        sqareCount++;
+                        Squares[XCount, YCount] = Pieces.Black | Pieces.Bishop;
+                        XCount++;
                         break;
                     case 'r':
-                        Squares[sqareCount] = Pieces.Black | Pieces.Rook;
-                        sqareCount++;
+                        Squares[XCount, YCount] = Pieces.Black | Pieces.Rook;
+                        XCount++;
                         break;
                     case 'q':
-                        Squares[sqareCount] = Pieces.Black | Pieces.Queen;
-                        sqareCount++;
+                        Squares[XCount, YCount] = Pieces.Black | Pieces.Queen;
+                        XCount++;
                         break;
                     case 'k':
-                        Squares[sqareCount] = Pieces.Black | Pieces.King;
-                        sqareCount++;
+                        Squares[XCount, YCount] = Pieces.Black | Pieces.King;
+                        XCount++;
                         break;
                     case 'P':
-                        Squares[sqareCount] = Pieces.White | Pieces.Pawn;
-                        sqareCount++;
+                        Squares[XCount, YCount] = Pieces.White | Pieces.Pawn;
+                        XCount++;
                         break;
                     case 'N':
-                        Squares[sqareCount] = Pieces.White | Pieces.Knight;
-                        sqareCount++;
+                        Squares[XCount, YCount] = Pieces.White | Pieces.Knight;
+                        XCount++;
                         break;
                     case 'B':
-                        Squares[sqareCount] = Pieces.White | Pieces.Bishop;
-                        sqareCount++;
+                        Squares[XCount, YCount] = Pieces.White | Pieces.Bishop;
+                        XCount++;
                         break;
                     case 'R':
-                        Squares[sqareCount] = Pieces.White | Pieces.Rook;
-                        sqareCount++;
+                        Squares[XCount, YCount] = Pieces.White | Pieces.Rook;
+                        XCount++;
                         break;
                     case 'Q':
-                        Squares[sqareCount] = Pieces.White | Pieces.Queen;
-                        sqareCount++;
+                        Squares[XCount, YCount] = Pieces.White | Pieces.Queen;
+                        XCount++;
                         break;
                     case 'K':
-                        Squares[sqareCount] = Pieces.White | Pieces.King;
-                        sqareCount++;
+                        Squares[XCount, YCount] = Pieces.White | Pieces.King;
+                        XCount++;
                         break;
                     case '/':
                         break;
@@ -221,10 +237,12 @@
         #endregion
 
         #region Helper Methods
+
         private int AlgebircToBoardIndex(string algebircNotation)
         {
             return (algebircNotation[0] - 96) + 8 * ((int)char.GetNumericValue(algebircNotation[1]) - 1) - 1;
         }
+
         #endregion
 
     }
