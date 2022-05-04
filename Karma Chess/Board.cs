@@ -9,12 +9,14 @@
         public (int, int) EnPassantTarget;
         public int HalfmoveClock;
         public int FullmoveNumber;
-        public List<((int file, int rank) from, (int file, int rank) to, int Promote)> PseudoLegalMoves;
+        //Special holds Promotions if Pawn or Casttling if King
+        //Special defaul is 0, positive is promotion, negative is castling
+        public List<((int file, int rank) from, (int file, int rank) to, int Special)> PseudoLegalMoves;
 
         public Board()
         {
             Squares = new Pieces[8, 8];
-            PseudoLegalMoves = new List<((int file, int rank) from, (int file, int rank) to, int Promote)>();
+            PseudoLegalMoves = new List<((int file, int rank) from, (int file, int rank) to, int Special)>();
         }
 
         #region Board Inits
@@ -31,8 +33,8 @@
             Squares[0, 0] = Pieces.White | Pieces.Rook;
             Squares[1, 0] = Pieces.White | Pieces.Knight;
             Squares[2, 0] = Pieces.White | Pieces.Bishop;
-            Squares[3, 0] = Pieces.White | Pieces.King;
-            Squares[4, 0] = Pieces.White | Pieces.Queen;
+            Squares[3, 0] = Pieces.White | Pieces.Queen;
+            Squares[4, 0] = Pieces.White | Pieces.King;
             Squares[5, 0] = Pieces.White | Pieces.Bishop;
             Squares[6, 0] = Pieces.White | Pieces.Knight;
             Squares[7, 0] = Pieces.White | Pieces.Rook;
@@ -48,8 +50,8 @@
             Squares[0, 7] = Pieces.Black | Pieces.Rook;
             Squares[1, 7] = Pieces.Black | Pieces.Knight;
             Squares[2, 7] = Pieces.Black | Pieces.Bishop;
-            Squares[3, 7] = Pieces.Black | Pieces.King;
-            Squares[4, 7] = Pieces.Black | Pieces.Queen;
+            Squares[3, 7] = Pieces.Black | Pieces.Queen;
+            Squares[4, 7] = Pieces.Black | Pieces.King;
             Squares[5, 7] = Pieces.Black | Pieces.Bishop;
             Squares[6, 7] = Pieces.Black | Pieces.Knight;
             Squares[7, 7] = Pieces.Black | Pieces.Rook;
@@ -75,14 +77,14 @@
         public void FenToBoard(string fen)
         {
             Array.Clear(Squares, 0, Squares.Length);
-            int fileCount = 7;
+            int fileCount = 0;
             int rankCount = 7;
             foreach (var c in fen)
             {
-                if (fileCount < 0)
+                if (fileCount > 7)
                 {
                     rankCount--;
-                    fileCount = 7;
+                    fileCount = 0;
                     if (rankCount < 0)
                     {
                         break;
@@ -100,55 +102,55 @@
                     case '7':
                     case '8':
                         int emptyCount = (int)char.GetNumericValue(c);
-                        fileCount -= emptyCount;
+                        fileCount += emptyCount;
                         break;
                     case 'p':
                         Squares[fileCount, rankCount] = Pieces.Black | Pieces.Pawn;
-                        fileCount--;
+                        fileCount++;
                         break;
                     case 'n':
                         Squares[fileCount, rankCount] = Pieces.Black | Pieces.Knight;
-                        fileCount--;
+                        fileCount++;
                         break;
                     case 'b':
                         Squares[fileCount, rankCount] = Pieces.Black | Pieces.Bishop;
-                        fileCount--;
+                        fileCount++;
                         break;
                     case 'r':
                         Squares[fileCount, rankCount] = Pieces.Black | Pieces.Rook;
-                        fileCount--;
+                        fileCount++;
                         break;
                     case 'q':
                         Squares[fileCount, rankCount] = Pieces.Black | Pieces.Queen;
-                        fileCount--;
+                        fileCount++;
                         break;
                     case 'k':
                         Squares[fileCount, rankCount] = Pieces.Black | Pieces.King;
-                        fileCount--;
+                        fileCount++;
                         break;
                     case 'P':
                         Squares[fileCount, rankCount] = Pieces.White | Pieces.Pawn;
-                        fileCount--;
+                        fileCount++;
                         break;
                     case 'N':
                         Squares[fileCount, rankCount] = Pieces.White | Pieces.Knight;
-                        fileCount--;
+                        fileCount++;
                         break;
                     case 'B':
                         Squares[fileCount, rankCount] = Pieces.White | Pieces.Bishop;
-                        fileCount--;
+                        fileCount++;
                         break;
                     case 'R':
                         Squares[fileCount, rankCount] = Pieces.White | Pieces.Rook;
-                        fileCount--;
+                        fileCount++;
                         break;
                     case 'Q':
                         Squares[fileCount, rankCount] = Pieces.White | Pieces.Queen;
-                        fileCount--;
+                        fileCount++;
                         break;
                     case 'K':
                         Squares[fileCount, rankCount] = Pieces.White | Pieces.King;
-                        fileCount--;
+                        fileCount++;
                         break;
                     case '/':
                         break;
@@ -209,8 +211,15 @@
             {
                 EnPassantTarget = AlgebircToBoardIndex(flags[2].ToLower());
             }
-            HalfmoveClock = int.Parse(flags[3]);
-            FullmoveNumber = int.Parse(flags[4]);
+            try
+            {
+                HalfmoveClock = int.Parse(flags[3]);
+                FullmoveNumber = int.Parse(flags[4]);
+            }
+            catch (Exception ex)
+            {
+                //TODO: Log here
+            }
         }
         #endregion
 
@@ -603,7 +612,7 @@
                                         PseudoLegalMoves.Add(((file, rank), (file, rank + distance), 0));
                                         break;
                                     }
-                                    else if((Squares[file, rank + distance]
+                                    else if ((Squares[file, rank + distance]
                                             & Pieces.ColorMask).Equals(Turn))
                                     {
                                         break;
@@ -917,9 +926,43 @@
                                         PseudoLegalMoves.Add(((file, rank), (file - 1, rank), 0));
                                     }
                                 }
-
-                                //TODO: Castling
-
+                                //Castling
+                                if (Squares[file, rank].IsWhite())
+                                {
+                                    if ((Castling & Castling.WhiteKingSide) == Castling.WhiteKingSide
+                                        && Squares[file + 1, rank].IsEmpty()
+                                        && Squares[file + 2, rank].IsEmpty()
+                                        && Squares[file + 3, rank].IsRook())
+                                    {
+                                        PseudoLegalMoves.Add(((file, rank), (file + 2, rank), -1));
+                                    }
+                                    if ((Castling & Castling.WhiteQueenSide) == Castling.WhiteQueenSide
+                                        && Squares[file - 1, rank].IsEmpty()
+                                        && Squares[file - 2, rank].IsEmpty()
+                                        && Squares[file - 3, rank].IsEmpty()
+                                        && Squares[file - 4, rank].IsRook())
+                                    {
+                                        PseudoLegalMoves.Add(((file, rank), (file - 2, rank), -1));
+                                    }
+                                }
+                                else if (Squares[file, rank].IsBlack())
+                                {
+                                    if ((Castling & Castling.BlackKingSide) == Castling.BlackKingSide
+                                        && Squares[file + 1, rank].IsEmpty()
+                                        && Squares[file + 2, rank].IsEmpty()
+                                        && Squares[file + 3, rank].IsRook())
+                                    {
+                                        PseudoLegalMoves.Add(((file, rank), (file + 2, rank), -1));
+                                    }
+                                    if ((Castling & Castling.BlackQueenSide) == Castling.BlackQueenSide
+                                        && Squares[file - 1, rank].IsEmpty()
+                                        && Squares[file - 2, rank].IsEmpty()
+                                        && Squares[file - 3, rank].IsEmpty()
+                                        && Squares[file - 4, rank].IsRook())
+                                    {
+                                        PseudoLegalMoves.Add(((file, rank), (file - 2, rank), -1));
+                                    }
+                                }
                                 #endregion
                                 break;
                             case Pieces.None:
