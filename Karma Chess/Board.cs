@@ -5,16 +5,16 @@
         public Pieces[,] Squares;
         public Turn Turn;
         public Castling Castling;
-        //-1 For no target, 0-63 for EnPassant spre target index
+        //(-1,-1) For no target or the indexes for the EnPasant Sqare
         public (int, int) EnPassantTarget;
         public int HalfmoveClock;
         public int FullmoveNumber;
-        public List<(int from, int to, int promote)> PseudoLegalMoves;
+        public List<((int file, int rank) from, (int file, int rank) to, int Promote)> PseudoLegalMoves;
 
         public Board()
         {
             Squares = new Pieces[8, 8];
-            PseudoLegalMoves = new List<(int from, int to, int promote)>();
+            PseudoLegalMoves = new List<((int file, int rank) from, (int file, int rank) to, int Promote)>();
         }
 
         #region Board Inits
@@ -75,15 +75,15 @@
         public void FenToBoard(string fen)
         {
             Array.Clear(Squares, 0, Squares.Length);
-            int XCount = 7;
-            int YCount = 7;
+            int fileCount = 7;
+            int rankCount = 7;
             foreach (var c in fen)
             {
-                if (XCount < 0)
+                if (fileCount < 0)
                 {
-                    YCount--;
-                    XCount = 7;
-                    if (YCount < 0)
+                    rankCount--;
+                    fileCount = 7;
+                    if (rankCount < 0)
                     {
                         break;
                     }
@@ -100,55 +100,55 @@
                     case '7':
                     case '8':
                         int emptyCount = (int)char.GetNumericValue(c);
-                        XCount -= emptyCount;
+                        fileCount -= emptyCount;
                         break;
                     case 'p':
-                        Squares[XCount, YCount] = Pieces.Black | Pieces.Pawn;
-                        XCount--;
+                        Squares[fileCount, rankCount] = Pieces.Black | Pieces.Pawn;
+                        fileCount--;
                         break;
                     case 'n':
-                        Squares[XCount, YCount] = Pieces.Black | Pieces.Knight;
-                        XCount--;
+                        Squares[fileCount, rankCount] = Pieces.Black | Pieces.Knight;
+                        fileCount--;
                         break;
                     case 'b':
-                        Squares[XCount, YCount] = Pieces.Black | Pieces.Bishop;
-                        XCount--;
+                        Squares[fileCount, rankCount] = Pieces.Black | Pieces.Bishop;
+                        fileCount--;
                         break;
                     case 'r':
-                        Squares[XCount, YCount] = Pieces.Black | Pieces.Rook;
-                        XCount--;
+                        Squares[fileCount, rankCount] = Pieces.Black | Pieces.Rook;
+                        fileCount--;
                         break;
                     case 'q':
-                        Squares[XCount, YCount] = Pieces.Black | Pieces.Queen;
-                        XCount--;
+                        Squares[fileCount, rankCount] = Pieces.Black | Pieces.Queen;
+                        fileCount--;
                         break;
                     case 'k':
-                        Squares[XCount, YCount] = Pieces.Black | Pieces.King;
-                        XCount--;
+                        Squares[fileCount, rankCount] = Pieces.Black | Pieces.King;
+                        fileCount--;
                         break;
                     case 'P':
-                        Squares[XCount, YCount] = Pieces.White | Pieces.Pawn;
-                        XCount--;
+                        Squares[fileCount, rankCount] = Pieces.White | Pieces.Pawn;
+                        fileCount--;
                         break;
                     case 'N':
-                        Squares[XCount, YCount] = Pieces.White | Pieces.Knight;
-                        XCount--;
+                        Squares[fileCount, rankCount] = Pieces.White | Pieces.Knight;
+                        fileCount--;
                         break;
                     case 'B':
-                        Squares[XCount, YCount] = Pieces.White | Pieces.Bishop;
-                        XCount--;
+                        Squares[fileCount, rankCount] = Pieces.White | Pieces.Bishop;
+                        fileCount--;
                         break;
                     case 'R':
-                        Squares[XCount, YCount] = Pieces.White | Pieces.Rook;
-                        XCount--;
+                        Squares[fileCount, rankCount] = Pieces.White | Pieces.Rook;
+                        fileCount--;
                         break;
                     case 'Q':
-                        Squares[XCount, YCount] = Pieces.White | Pieces.Queen;
-                        XCount--;
+                        Squares[fileCount, rankCount] = Pieces.White | Pieces.Queen;
+                        fileCount--;
                         break;
                     case 'K':
-                        Squares[XCount, YCount] = Pieces.White | Pieces.King;
-                        XCount--;
+                        Squares[fileCount, rankCount] = Pieces.White | Pieces.King;
+                        fileCount--;
                         break;
                     case '/':
                         break;
@@ -231,26 +231,30 @@
         /// <param name="from"></param>
         /// <param name="to"></param>
         /// <returns></returns>
-        public bool Move(int from, int to, int Promote)
+        public bool Move((int file, int rank) from, (int file, int rank) to, int Promote)
         {
-            if (from < 0 || from > 63 || to < 0 || to > 63) return false;
+            if (from.file < 0 || from.rank < 0
+                || from.file > 7 || from.rank > 7
+                || to.file < 0|| to.rank < 0
+                || to.file > 7 || to.rank > 7
+                ) return false;
             return false;
         }
 
         public void CalculatePseudoLegalMoves()
         {
-            for (int i = 0; i < 8; i++)
+            for (int file = 0; file < 8; file++)
             {
-                for (int j = 0; j < 8; j++)
+                for (int rank = 0; rank < 8; rank++)
                 {
-                    switch (Squares[i, j])
+                    switch (Squares[file, rank])
                     {
                         case Pieces.Pawn:
-                            if (Squares[i, j].IsWhite())
+                            if (Squares[file, rank].IsWhite())
                             {
 
                             }
-                            else if (Squares[i, j].IsBlack())
+                            else if (Squares[file, rank].IsBlack())
                             {
 
                             }

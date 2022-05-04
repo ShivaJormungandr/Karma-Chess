@@ -8,18 +8,18 @@ namespace Karma_Chess
 {
     public static class ExtensionMethods
     {
-        public static void drawBoard(this Form form, Board board)
+        public static void DrawBoard(this Form form, Board board)
         {
-            for (int x = 0; x < 8; x++)
+            for (int file = 0; file < 8; file++)
             {
-                for (int y = 0; y < 8; y++)
+                for (int rank = 0; rank < 8; rank++)
                 {
-                    if (board.Squares[x, y] == Pieces.None)
+                    if (board.Squares[file, rank] == Pieces.None)
                     {
                         continue;
                     }
 
-                    _ = new DrawPiece(x, y, form, board.Squares[x, y]);
+                    _ = new DrawPiece(file, rank, form, board.Squares[file, rank]);
                 }
             }
         }

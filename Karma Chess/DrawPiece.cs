@@ -8,9 +8,9 @@ namespace Karma_Chess
 {
     public class DrawPiece
     {
-        public int[] positions = { 6, 75, 144, 213, 282, 351, 420, 489 };
+        public int[] positions = { 489, 420, 351, 282, 213, 144, 75, 6 };
 
-        public DrawPiece(int x, int y, Form mask, Pieces pieceSqare)
+        public DrawPiece(int file, int rank, Form mask, Pieces pieceSqare)
         {
             PictureBox piece = new PictureBox();
 
@@ -82,7 +82,7 @@ namespace Karma_Chess
             }
             
             piece.Size = new Size(64, 64);
-            piece.Location = new Point(positions[x], positions[y]);
+            piece.Location = new Point(positions[file], positions[rank]);
             piece.BackColor=Color.Transparent;    
             //piece.Layout = ImageLayout.Center;
             piece.Visible = true;
