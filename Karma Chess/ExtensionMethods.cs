@@ -10,16 +10,16 @@ namespace Karma_Chess
     {
         public static void drawBoard(this Form form, Board board)
         {
-            for (int i = 0; i < 64; i++)
+            for (int x = 0; x < 8; x++)
             {
-                if (board.Squares[i] == Pieces.None)
+                for (int y = 0; y < 8; y++)
                 {
-                    continue;
+                    if (board.Squares[x, y] == Pieces.None)
+                    {
+                        continue;
+                    }
+                    var piece = new DrawPiece(x, y, form, board.Squares[x, y]);
                 }
-
-                int x = i % 8;
-                int y = i / 8;
-                var piece = new DrawPiece(x, y, form, board.Squares[i]);
             }
         }
 

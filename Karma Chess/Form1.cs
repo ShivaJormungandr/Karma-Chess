@@ -2,6 +2,7 @@ namespace Karma_Chess
 {
     public partial class Form1 : Form
     {
+        Board board;
         public Form1()
         {
             InitializeComponent();
@@ -9,9 +10,14 @@ namespace Karma_Chess
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            Board board = new Board(this);
+            board = new Board(this);
             board.InitStartBoard();
             this.drawBoard(board);
+        }
+
+        private void Form1_MouseClick(object sender, MouseEventArgs e)
+        {
+            board.ReceiveClickedPiece(e.X, e.Y);
         }
 
         //private void btPrintBoard_Click(object sender, EventArgs e)
