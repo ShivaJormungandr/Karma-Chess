@@ -446,7 +446,7 @@
                                         PseudoLegalMoves.Add(((file, rank), (file - 1, rank + 2), 0));
                                     }
                                 }
-                                if (file + 1 <= 1 && rank + 2 <= 7)
+                                if (file + 1 <= 7 && rank + 2 <= 7)
                                 {
                                     if (Squares[file + 1, rank + 2].IsEmpty()
                                         || !(Squares[file + 1, rank + 2]
@@ -455,7 +455,7 @@
                                         PseudoLegalMoves.Add(((file, rank), (file + 1, rank + 2), 0));
                                     }
                                 }
-                                if (file + 2 <= 1 && rank + 1 <= 7)
+                                if (file + 2 <= 7 && rank + 1 <= 7)
                                 {
                                     if (Squares[file + 2, rank + 1].IsEmpty()
                                         || !(Squares[file + 2, rank + 1]
@@ -465,7 +465,7 @@
                                     }
 
                                 }
-                                if (file + 2 <= 1 && rank - 1 >= 0)
+                                if (file + 2 <= 7 && rank - 1 >= 0)
                                 {
                                     if (Squares[file + 2, rank - 1].IsEmpty()
                                         || !(Squares[file + 2, rank - 1]
@@ -474,7 +474,7 @@
                                         PseudoLegalMoves.Add(((file, rank), (file + 2, rank - 1), 0));
                                     }
                                 }
-                                if (file + 1 <= 1 && rank - 2 >= 0)
+                                if (file + 1 <= 7 && rank - 2 >= 0)
                                 {
                                     if (Squares[file + 1, rank - 2].IsEmpty()
                                         || !(Squares[file + 1, rank - 2]
