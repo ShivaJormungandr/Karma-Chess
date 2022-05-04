@@ -83,11 +83,13 @@
                 if (XCount > 7)
                 {
                     YCount++;
-                    if (XCount > 7)
+                    XCount = 0;
+                    if (YCount > 7)
                     {
                         break;
                     }
                 }
+
                 switch (c)
                 {
                     case '1':
@@ -154,7 +156,7 @@
                     default:
                         throw new Exception("Illegal character in FEN.");
                 }
-            }//pnbrqk
+            }
 
             var flags = fen.Split(" ", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
             InitFlagsFen(flags[1..]);
@@ -200,7 +202,14 @@
 
             }
 
-            EnPassantTarget = AlgebircToBoardIndex(flags[2].ToLower());
+            if (flags[2].Equals("-"))
+            {
+                EnPassantTarget = -1;
+            }
+            else
+            {
+                EnPassantTarget = AlgebircToBoardIndex(flags[2].ToLower());
+            }
             HalfmoveClock = int.Parse(flags[3]);
             FullmoveNumber = int.Parse(flags[4]);
         }
@@ -233,14 +242,14 @@
             {
                 for (int j = 0; j < 8; j++)
                 {
-                    switch (Squares[i,j])
+                    switch (Squares[i, j])
                     {
                         case Pieces.Pawn:
-                            if (Squares[i,j].IsWhite())
+                            if (Squares[i, j].IsWhite())
                             {
 
                             }
-                            else if (Squares[i,j].IsBlack())
+                            else if (Squares[i, j].IsBlack())
                             {
 
                             }
