@@ -235,7 +235,7 @@
         {
             if (from.file < 0 || from.rank < 0
                 || from.file > 7 || from.rank > 7
-                || to.file < 0|| to.rank < 0
+                || to.file < 0 || to.rank < 0
                 || to.file > 7 || to.rank > 7
                 ) return false;
             return false;
@@ -247,32 +247,620 @@
             {
                 for (int rank = 0; rank < 8; rank++)
                 {
-                    switch (Squares[file, rank])
-                    {
-                        case Pieces.Pawn:
-                            if (Squares[file, rank].IsWhite())
-                            {
+                    if ((Squares[file, rank] & Pieces.ColorMask).Equals(Turn))
+                        switch (Squares[file, rank] & Pieces.PieceMask)
+                        {
+                            case Pieces.Pawn:
+                                if (Squares[file, rank].IsWhite())
+                                {
+                                    #region White Pawn Moves
+                                    //Moves from the 2nd Rank (2 ranks up)
+                                    if (rank == 1)
+                                    {
+                                        if (Squares[file, rank + 1].IsEmpty() && Squares[file, rank + 2].IsEmpty())
+                                        {
+                                            PseudoLegalMoves.Add(((file, rank), (file, rank + 2), 0));
+                                        }
+                                    }
+                                    //Normal Moves (1 rank up)
+                                    if (Squares[file, rank + 1].IsEmpty())
+                                    {
+                                        //if next rank is the last one add promotions to the board too
+                                        if (rank + 1 == 7)
+                                        {
+                                            //Pawn to Knight
+                                            PseudoLegalMoves.Add(((file, rank), (file, rank + 1), 1));
+                                            //Pawn to Bishop
+                                            PseudoLegalMoves.Add(((file, rank), (file, rank + 1), 2));
+                                            //Pawn to Rook
+                                            PseudoLegalMoves.Add(((file, rank), (file, rank + 1), 3));
+                                            //Pawn to Queen
+                                            PseudoLegalMoves.Add(((file, rank), (file, rank + 1), 4));
+                                        }
+                                        else
+                                        {
+                                            PseudoLegalMoves.Add(((file, rank), (file, rank + 1), 0));
+                                        }
+                                    }
+                                    #endregion
 
-                            }
-                            else if (Squares[file, rank].IsBlack())
-                            {
+                                    #region White Pawn Captures
+                                    //Captures (1 rank diagonal and EnPassant)
+                                    if (file + 1 <= 7)
+                                    {
+                                        if ((Squares[file + 1, rank + 1].IsBlack()
+                                            || (file + 1, rank + 1).Equals(EnPassantTarget))
+                                            && !Squares[file + 1, rank + 1].IsKing())
+                                        {
+                                            //if next rank is the last one add promotions to the board too
+                                            if (rank + 1 == 7)
+                                            {
+                                                //Pawn to Knight
+                                                PseudoLegalMoves.Add(((file, rank), (file + 1, rank + 1), 1));
+                                                //Pawn to Bishop
+                                                PseudoLegalMoves.Add(((file, rank), (file + 1, rank + 1), 2));
+                                                //Pawn to Rook
+                                                PseudoLegalMoves.Add(((file, rank), (file + 1, rank + 1), 3));
+                                                //Pawn to Queen
+                                                PseudoLegalMoves.Add(((file, rank), (file + 1, rank + 1), 4));
+                                            }
+                                            else
+                                            {
+                                                PseudoLegalMoves.Add(((file, rank), (file + 1, rank + 1), 0));
+                                            }
+                                        }
+                                    }
 
-                            }
-                            break;
-                        case Pieces.Knight:
-                            break;
-                        case Pieces.Bishop:
-                            break;
-                        case Pieces.Rook:
-                            break;
-                        case Pieces.Queen:
-                            break;
-                        case Pieces.King:
-                            break;
-                        case Pieces.None:
-                        default:
-                            break;
-                    }
+                                    if (file - 1 >= 0)
+                                    {
+                                        if ((Squares[file - 1, rank + 1].IsBlack()
+                                            || (file - 1, rank + 1).Equals(EnPassantTarget))
+                                            && !Squares[file - 1, rank + 1].IsKing())
+                                        {
+                                            //if next rank is the last one add promotions to the board too
+                                            if (rank + 1 == 7)
+                                            {
+                                                //Pawn to Knight
+                                                PseudoLegalMoves.Add(((file, rank), (file - 1, rank + 1), 1));
+                                                //Pawn to Bishop
+                                                PseudoLegalMoves.Add(((file, rank), (file - 1, rank + 1), 2));
+                                                //Pawn to Rook
+                                                PseudoLegalMoves.Add(((file, rank), (file - 1, rank + 1), 3));
+                                                //Pawn to Queen
+                                                PseudoLegalMoves.Add(((file, rank), (file - 1, rank + 1), 4));
+                                            }
+                                            else
+                                            {
+                                                //Pawn to Knight
+                                                PseudoLegalMoves.Add(((file, rank), (file - 1, rank + 1), 1));
+                                            }
+                                        }
+                                    }
+                                    #endregion
+                                }
+                                else if (Squares[file, rank].IsBlack())
+                                {
+                                    #region Black Pawn Moves
+                                    //Moves from the 2nd Rank (2 ranks up)
+                                    if (rank == 6)
+                                    {
+                                        if (Squares[file, rank - 1].IsEmpty() && Squares[file, rank - 2].IsEmpty())
+                                        {
+                                            PseudoLegalMoves.Add(((file, rank), (file, rank - 2), 0));
+                                        }
+                                    }
+                                    //Normal Moves (1 rank up)
+                                    if (Squares[file, rank - 1].IsEmpty())
+                                    {
+                                        //if next rank is the last one add promotions to the board too
+                                        if (rank - 1 == 0)
+                                        {
+                                            //Pawn to Knight
+                                            PseudoLegalMoves.Add(((file, rank), (file, rank - 1), 1));
+                                            //Pawn to Bishop
+                                            PseudoLegalMoves.Add(((file, rank), (file, rank - 1), 2));
+                                            //Pawn to Rook
+                                            PseudoLegalMoves.Add(((file, rank), (file, rank - 1), 3));
+                                            //Pawn to Queen
+                                            PseudoLegalMoves.Add(((file, rank), (file, rank - 1), 4));
+                                        }
+                                        else
+                                        {
+                                            PseudoLegalMoves.Add(((file, rank), (file, rank - 1), 0));
+                                        }
+                                    }
+                                    #endregion
+
+                                    #region Black Pawn Captures
+                                    //Captures (1 rank diagonal and EnPassant)
+                                    if (file + 1 <= 7)
+                                    {
+                                        if ((Squares[file + 1, rank - 1].IsBlack()
+                                            || (file + 1, rank - 1).Equals(EnPassantTarget))
+                                            && !Squares[file + 1, rank - 1].IsKing())
+                                        {
+                                            //if next rank is the last one add promotions to the board too
+                                            if (rank + 1 == 7)
+                                            {
+                                                //Pawn to Knight
+                                                PseudoLegalMoves.Add(((file, rank), (file + 1, rank - 1), 1));
+                                                //Pawn to Bishop
+                                                PseudoLegalMoves.Add(((file, rank), (file + 1, rank - 1), 2));
+                                                //Pawn to Rook
+                                                PseudoLegalMoves.Add(((file, rank), (file + 1, rank - 1), 3));
+                                                //Pawn to Queen
+                                                PseudoLegalMoves.Add(((file, rank), (file + 1, rank - 1), 4));
+                                            }
+                                            else
+                                            {
+                                                PseudoLegalMoves.Add(((file, rank), (file + 1, rank - 1), 0));
+                                            }
+                                        }
+                                    }
+
+                                    if (file - 1 >= 0)
+                                    {
+                                        if ((Squares[file - 1, rank - 1].IsBlack()
+                                            || (file - 1, rank - 1).Equals(EnPassantTarget))
+                                            && !Squares[file - 1, rank - 1].IsKing())
+                                        {
+                                            //if next rank is the last one add promotions to the board too
+                                            if (rank + 1 == 7)
+                                            {
+                                                //Pawn to Knight
+                                                PseudoLegalMoves.Add(((file, rank), (file - 1, rank - 1), 1));
+                                                //Pawn to Bishop
+                                                PseudoLegalMoves.Add(((file, rank), (file - 1, rank - 1), 2));
+                                                //Pawn to Rook
+                                                PseudoLegalMoves.Add(((file, rank), (file - 1, rank - 1), 3));
+                                                //Pawn to Queen
+                                                PseudoLegalMoves.Add(((file, rank), (file - 1, rank - 1), 4));
+                                            }
+                                            else
+                                            {
+                                                //Pawn to Knight
+                                                PseudoLegalMoves.Add(((file, rank), (file - 1, rank - 1), 1));
+                                            }
+                                        }
+                                    }
+                                    #endregion
+                                }
+                                break;
+                            case Pieces.Knight:
+                                #region Knight Moves
+                                if (file - 2 >= 0 && rank + 1 <= 7)
+                                {
+
+                                    if (Squares[file - 2, rank + 1].IsEmpty()
+                                        || !(Squares[file - 2, rank + 1]
+                                            & Pieces.ColorMask).Equals(Turn))
+                                    {
+                                        PseudoLegalMoves.Add(((file, rank), (file - 2, rank + 1), 0));
+                                    }
+                                    break;
+                                }
+                                if (file - 1 >= 0 && rank + 2 <= 7)
+                                {
+
+                                    if (Squares[file - 1, rank + 2].IsEmpty()
+                                        || !(Squares[file - 1, rank + 2]
+                                            & Pieces.ColorMask).Equals(Turn))
+                                    {
+                                        PseudoLegalMoves.Add(((file, rank), (file - 1, rank + 2), 0));
+                                    }
+                                    break;
+                                }
+                                if (file + 1 <= 1 && rank + 2 <= 7)
+                                {
+
+                                    if (Squares[file + 1, rank + 2].IsEmpty()
+                                        || !(Squares[file + 1, rank + 2]
+                                            & Pieces.ColorMask).Equals(Turn))
+                                    {
+                                        PseudoLegalMoves.Add(((file, rank), (file + 1, rank + 2), 0));
+                                    }
+                                    break;
+                                }
+                                if (file + 2 <= 1 && rank + 1 <= 7)
+                                {
+
+                                    if (Squares[file + 2, rank + 1].IsEmpty()
+                                        || !(Squares[file + 2, rank + 1]
+                                            & Pieces.ColorMask).Equals(Turn))
+                                    {
+                                        PseudoLegalMoves.Add(((file, rank), (file + 2, rank + 1), 0));
+                                    }
+                                    break;
+                                }
+                                if (file + 2 <= 1 && rank - 1 >= 0)
+                                {
+
+                                    if (Squares[file + 2, rank - 1].IsEmpty()
+                                        || !(Squares[file + 2, rank - 1]
+                                            & Pieces.ColorMask).Equals(Turn))
+                                    {
+                                        PseudoLegalMoves.Add(((file, rank), (file + 2, rank - 1), 0));
+                                    }
+                                    break;
+                                }
+                                if (file + 1 <= 1 && rank - 2 >= 0)
+                                {
+
+                                    if (Squares[file + 1, rank - 2].IsEmpty()
+                                        || !(Squares[file + 1, rank - 2]
+                                            & Pieces.ColorMask).Equals(Turn))
+                                    {
+                                        PseudoLegalMoves.Add(((file, rank), (file + 1, rank - 2), 0));
+                                    }
+                                    break;
+                                }
+                                if (file - 1 >= 0 && rank - 2 >= 0)
+                                {
+
+                                    if (Squares[file - 1, rank - 2].IsEmpty()
+                                        || !(Squares[file - 1, rank - 2]
+                                            & Pieces.ColorMask).Equals(Turn))
+                                    {
+                                        PseudoLegalMoves.Add(((file, rank), (file - 1, rank - 2), 0));
+                                    }
+                                    break;
+                                }
+                                if (file - 2 >= 0 && rank - 1 >= 0)
+                                {
+
+                                    if (Squares[file - 2, rank - 1].IsEmpty()
+                                        || !(Squares[file - 2, rank - 1]
+                                            & Pieces.ColorMask).Equals(Turn))
+                                    {
+                                        PseudoLegalMoves.Add(((file, rank), (file - 2, rank - 1), 0));
+                                    }
+                                    break;
+                                }
+                                #endregion
+                                break;
+                            case Pieces.Bishop:
+                                #region Bishop Moves
+                                //NW
+                                for (int distance = 1; distance < 8; distance++)
+                                {
+                                    if (file - distance < 0 || rank + distance > 7) break;
+                                    if (Squares[file - distance, rank + distance].IsEmpty())
+                                    {
+                                        PseudoLegalMoves.Add(((file, rank), (file - distance, rank + distance), 0));
+                                    }
+                                    else if (!(Squares[file - distance, rank + distance]
+                                            & Pieces.ColorMask).Equals(Turn))
+                                    {
+                                        PseudoLegalMoves.Add(((file, rank), (file - distance, rank + distance), 0));
+                                        break;
+                                    }
+                                }
+                                //NE
+                                for (int distance = 1; distance < 8; distance++)
+                                {
+                                    if (file + distance > 7 || rank + distance > 7) break;
+                                    if (Squares[file + distance, rank + distance].IsEmpty())
+                                    {
+                                        PseudoLegalMoves.Add(((file, rank), (file + distance, rank + distance), 0));
+                                    }
+                                    else if (!(Squares[file + distance, rank + distance]
+                                            & Pieces.ColorMask).Equals(Turn))
+                                    {
+                                        PseudoLegalMoves.Add(((file, rank), (file + distance, rank + distance), 0));
+                                        break;
+                                    }
+                                }
+                                //SE
+                                for (int distance = 1; distance < 8; distance++)
+                                {
+                                    if (file + distance > 7 || rank - distance < 0) break;
+                                    if (Squares[file + distance, rank - distance].IsEmpty())
+                                    {
+                                        PseudoLegalMoves.Add(((file, rank), (file + distance, rank - distance), 0));
+                                    }
+                                    else if (!(Squares[file + distance, rank - distance]
+                                            & Pieces.ColorMask).Equals(Turn))
+                                    {
+                                        PseudoLegalMoves.Add(((file, rank), (file + distance, rank - distance), 0));
+                                        break;
+                                    }
+                                }
+                                //SW
+                                for (int distance = 1; distance < 8; distance++)
+                                {
+                                    if (file - distance < 0 || rank - distance < 0) break;
+                                    if (Squares[file - distance, rank - distance].IsEmpty())
+                                    {
+                                        PseudoLegalMoves.Add(((file, rank), (file - distance, rank - distance), 0));
+                                    }
+                                    else if (!(Squares[file - distance, rank - distance]
+                                            & Pieces.ColorMask).Equals(Turn))
+                                    {
+                                        PseudoLegalMoves.Add(((file, rank), (file - distance, rank - distance), 0));
+                                        break;
+                                    }
+                                }
+                                #endregion
+                                break;
+                            case Pieces.Rook:
+                                #region Rook Moves
+                                //N
+                                for (int distance = 1; distance < 8; distance++)
+                                {
+                                    if (rank + distance > 7) break;
+                                    if (Squares[file, rank + distance].IsEmpty())
+                                    {
+                                        PseudoLegalMoves.Add(((file, rank), (file, rank + distance), 0));
+                                    }
+                                    else if (!(Squares[file, rank + distance]
+                                            & Pieces.ColorMask).Equals(Turn))
+                                    {
+                                        PseudoLegalMoves.Add(((file, rank), (file, rank + distance), 0));
+                                        break;
+                                    }
+                                }
+                                //E
+                                for (int distance = 1; distance < 8; distance++)
+                                {
+                                    if (file + distance > 7) break;
+                                    if (Squares[file + distance, rank].IsEmpty())
+                                    {
+                                        PseudoLegalMoves.Add(((file, rank), (file + distance, rank), 0));
+                                    }
+                                    else if (!(Squares[file + distance, rank]
+                                            & Pieces.ColorMask).Equals(Turn))
+                                    {
+                                        PseudoLegalMoves.Add(((file, rank), (file + distance, rank), 0));
+                                        break;
+                                    }
+                                }
+                                //S
+                                for (int distance = 1; distance < 8; distance++)
+                                {
+                                    if (rank + distance < 0) break;
+                                    if (Squares[file, rank - distance].IsEmpty())
+                                    {
+                                        PseudoLegalMoves.Add(((file, rank), (file, rank - distance), 0));
+                                    }
+                                    else if (!(Squares[file, rank - distance]
+                                            & Pieces.ColorMask).Equals(Turn))
+                                    {
+                                        PseudoLegalMoves.Add(((file, rank), (file, rank - distance), 0));
+                                        break;
+                                    }
+                                }
+                                //W
+                                for (int distance = 1; distance < 8; distance++)
+                                {
+                                    if (file - distance < 0) break;
+                                    if (Squares[file - distance, rank].IsEmpty())
+                                    {
+                                        PseudoLegalMoves.Add(((file, rank), (file - distance, rank), 0));
+                                    }
+                                    else if (!(Squares[file - distance, rank]
+                                            & Pieces.ColorMask).Equals(Turn))
+                                    {
+                                        PseudoLegalMoves.Add(((file, rank), (file - distance, rank), 0));
+                                        break;
+                                    }
+                                }
+                                #endregion
+                                break;
+                            case Pieces.Queen:
+                                #region Queen Moves
+                                //NW
+                                for (int distance = 1; distance < 8; distance++)
+                                {
+                                    if (file - distance < 0 || rank + distance > 7) break;
+                                    if (Squares[file - distance, rank + distance].IsEmpty())
+                                    {
+                                        PseudoLegalMoves.Add(((file, rank), (file - distance, rank + distance), 0));
+                                    }
+                                    else if (!(Squares[file - distance, rank + distance]
+                                            & Pieces.ColorMask).Equals(Turn))
+                                    {
+                                        PseudoLegalMoves.Add(((file, rank), (file - distance, rank + distance), 0));
+                                        break;
+                                    }
+                                }
+                                //NE
+                                for (int distance = 1; distance < 8; distance++)
+                                {
+                                    if (file + distance > 7 || rank + distance > 7) break;
+                                    if (Squares[file + distance, rank + distance].IsEmpty())
+                                    {
+                                        PseudoLegalMoves.Add(((file, rank), (file + distance, rank + distance), 0));
+                                    }
+                                    else if (!(Squares[file + distance, rank + distance]
+                                            & Pieces.ColorMask).Equals(Turn))
+                                    {
+                                        PseudoLegalMoves.Add(((file, rank), (file + distance, rank + distance), 0));
+                                        break;
+                                    }
+                                }
+                                //SE
+                                for (int distance = 1; distance < 8; distance++)
+                                {
+                                    if (file + distance > 7 || rank - distance < 0) break;
+                                    if (Squares[file + distance, rank - distance].IsEmpty())
+                                    {
+                                        PseudoLegalMoves.Add(((file, rank), (file + distance, rank - distance), 0));
+                                    }
+                                    else if (!(Squares[file + distance, rank - distance]
+                                            & Pieces.ColorMask).Equals(Turn))
+                                    {
+                                        PseudoLegalMoves.Add(((file, rank), (file + distance, rank - distance), 0));
+                                        break;
+                                    }
+                                }
+                                //SW
+                                for (int distance = 1; distance < 8; distance++)
+                                {
+                                    if (file - distance < 0 || rank - distance < 0) break;
+                                    if (Squares[file - distance, rank - distance].IsEmpty())
+                                    {
+                                        PseudoLegalMoves.Add(((file, rank), (file - distance, rank - distance), 0));
+                                    }
+                                    else if (!(Squares[file - distance, rank - distance]
+                                            & Pieces.ColorMask).Equals(Turn))
+                                    {
+                                        PseudoLegalMoves.Add(((file, rank), (file - distance, rank - distance), 0));
+                                        break;
+                                    }
+                                }
+                                //N
+                                for (int distance = 1; distance < 8; distance++)
+                                {
+                                    if (rank + distance > 7) break;
+                                    if (Squares[file, rank + distance].IsEmpty())
+                                    {
+                                        PseudoLegalMoves.Add(((file, rank), (file, rank + distance), 0));
+                                    }
+                                    else if (!(Squares[file, rank + distance]
+                                            & Pieces.ColorMask).Equals(Turn))
+                                    {
+                                        PseudoLegalMoves.Add(((file, rank), (file, rank + distance), 0));
+                                        break;
+                                    }
+                                }
+                                //E
+                                for (int distance = 1; distance < 8; distance++)
+                                {
+                                    if (file + distance > 7) break;
+                                    if (Squares[file + distance, rank].IsEmpty())
+                                    {
+                                        PseudoLegalMoves.Add(((file, rank), (file + distance, rank), 0));
+                                    }
+                                    else if (!(Squares[file + distance, rank]
+                                            & Pieces.ColorMask).Equals(Turn))
+                                    {
+                                        PseudoLegalMoves.Add(((file, rank), (file + distance, rank), 0));
+                                        break;
+                                    }
+                                }
+                                //S
+                                for (int distance = 1; distance < 8; distance++)
+                                {
+                                    if (rank + distance < 0) break;
+                                    if (Squares[file, rank - distance].IsEmpty())
+                                    {
+                                        PseudoLegalMoves.Add(((file, rank), (file, rank - distance), 0));
+                                    }
+                                    else if (!(Squares[file, rank - distance]
+                                            & Pieces.ColorMask).Equals(Turn))
+                                    {
+                                        PseudoLegalMoves.Add(((file, rank), (file, rank - distance), 0));
+                                        break;
+                                    }
+                                }
+                                //W
+                                for (int distance = 1; distance < 8; distance++)
+                                {
+                                    if (file - distance < 0) break;
+                                    if (Squares[file - distance, rank].IsEmpty())
+                                    {
+                                        PseudoLegalMoves.Add(((file, rank), (file - distance, rank), 0));
+                                    }
+                                    else if (!(Squares[file - distance, rank]
+                                            & Pieces.ColorMask).Equals(Turn))
+                                    {
+                                        PseudoLegalMoves.Add(((file, rank), (file - distance, rank), 0));
+                                        break;
+                                    }
+                                }
+                                #endregion
+                                break;
+                            case Pieces.King:
+                                #region King Moves
+                                //NW
+                                if (file - 1 >= 0 && rank + 1 <= 7)
+                                {
+                                    if (Squares[file - 1, rank + 1].IsEmpty()
+                                        || !(Squares[file - 1, rank + 1]
+                                            & Pieces.ColorMask).Equals(Turn))
+                                    {
+                                        PseudoLegalMoves.Add(((file, rank), (file - 1, rank + 1), 0));
+                                    }
+                                }
+                                //N
+                                if (rank + 1 <= 7)
+                                {
+                                    if (Squares[file, rank + 1].IsEmpty()
+                                        || !(Squares[file, rank + 1]
+                                            & Pieces.ColorMask).Equals(Turn))
+                                    {
+                                        PseudoLegalMoves.Add(((file, rank), (file, rank + 1), 0));
+                                    }
+                                }
+                                //NE
+                                if (file + 1 <= 7 && rank + 1 <= 7)
+                                {
+                                    if (Squares[file + 1, rank + 1].IsEmpty()
+                                        || !(Squares[file + 1, rank + 1]
+                                            & Pieces.ColorMask).Equals(Turn))
+                                    {
+                                        PseudoLegalMoves.Add(((file, rank), (file + 1, rank + 1), 0));
+                                    }
+                                }
+                                //E
+                                if (file + 1 <= 7)
+                                {
+                                    if (Squares[file + 1, rank].IsEmpty()
+                                        || !(Squares[file + 1, rank]
+                                            & Pieces.ColorMask).Equals(Turn))
+                                    {
+                                        PseudoLegalMoves.Add(((file, rank), (file + 1, rank), 0));
+                                    }
+                                }
+                                //SE
+                                if (file + 1 <= 7 && rank - 1 >= 0)
+                                {
+                                    if (Squares[file + 1, rank - 1].IsEmpty()
+                                        || !(Squares[file + 1, rank - 1]
+                                            & Pieces.ColorMask).Equals(Turn))
+                                    {
+                                        PseudoLegalMoves.Add(((file, rank), (file + 1, rank - 1), 0));
+                                    }
+                                }
+                                //S
+                                if (rank - 1 >= 0)
+                                {
+                                    if (Squares[file, rank - 1].IsEmpty()
+                                        || !(Squares[file, rank - 1]
+                                            & Pieces.ColorMask).Equals(Turn))
+                                    {
+                                        PseudoLegalMoves.Add(((file, rank), (file, rank - 1), 0));
+                                    }
+                                }
+                                //SW
+                                if (file - 1 >= 0 && rank - 1 >= 0)
+                                {
+                                    if (Squares[file - 1, rank - 1].IsEmpty()
+                                        || !(Squares[file - 1, rank - 1]
+                                            & Pieces.ColorMask).Equals(Turn))
+                                    {
+                                        PseudoLegalMoves.Add(((file, rank), (file - 1, rank - 1), 0));
+                                    }
+                                }
+                                //W
+                                if (file - 1 >= 0)
+                                {
+                                    if (Squares[file - 1, rank].IsEmpty()
+                                        || !(Squares[file - 1, rank]
+                                            & Pieces.ColorMask).Equals(Turn))
+                                    {
+                                        PseudoLegalMoves.Add(((file, rank), (file - 1, rank), 0));
+                                    }
+                                }
+
+                                //TODO: Castling
+
+                                #endregion
+                                break;
+                            case Pieces.None:
+                            default:
+                                break;
+                        }
                 }
             }
         }

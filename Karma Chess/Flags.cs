@@ -13,6 +13,9 @@
 
         White = 0b01000000,
         Black = 0b10000000,
+
+        PieceMask = 0b00111111,
+        ColorMask = 0b11000000,
     }
 
     [Flags]
