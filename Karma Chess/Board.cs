@@ -2,8 +2,6 @@
 {
     public class Board
     {
-        public int[] positions = { 6, 75, 144, 213, 282, 351, 420, 489 };
-
         public Pieces[,] Squares;
         public Turn Turn;
         public Castling Castling;
@@ -17,11 +15,6 @@
         {
             Squares = new Pieces[8, 8];
             Mask = mask;
-        }
-
-        public void ReceiveClickedPiece(int x, int y)
-        {
-
         }
 
         #region Board Inits
