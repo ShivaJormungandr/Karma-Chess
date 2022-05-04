@@ -519,6 +519,11 @@
                                         PseudoLegalMoves.Add(((file, rank), (file - distance, rank + distance), 0));
                                         break;
                                     }
+                                    else if ((Squares[file - distance, rank + distance]
+                                            & Pieces.ColorMask).Equals(Turn))
+                                    {
+                                        break;
+                                    }
                                 }
                                 //NE
                                 for (int distance = 1; distance < 8; distance++)
@@ -532,6 +537,11 @@
                                             & Pieces.ColorMask).Equals(Turn))
                                     {
                                         PseudoLegalMoves.Add(((file, rank), (file + distance, rank + distance), 0));
+                                        break;
+                                    }
+                                    else if ((Squares[file + distance, rank + distance]
+                                            & Pieces.ColorMask).Equals(Turn))
+                                    {
                                         break;
                                     }
                                 }
@@ -549,6 +559,11 @@
                                         PseudoLegalMoves.Add(((file, rank), (file + distance, rank - distance), 0));
                                         break;
                                     }
+                                    else if ((Squares[file + distance, rank - distance]
+                                            & Pieces.ColorMask).Equals(Turn))
+                                    {
+                                        break;
+                                    }
                                 }
                                 //SW
                                 for (int distance = 1; distance < 8; distance++)
@@ -562,6 +577,11 @@
                                             & Pieces.ColorMask).Equals(Turn))
                                     {
                                         PseudoLegalMoves.Add(((file, rank), (file - distance, rank - distance), 0));
+                                        break;
+                                    }
+                                    else if (!(Squares[file - distance, rank - distance]
+                                            & Pieces.ColorMask).Equals(Turn))
+                                    {
                                         break;
                                     }
                                 }
@@ -667,6 +687,11 @@
                                         PseudoLegalMoves.Add(((file, rank), (file - distance, rank + distance), 0));
                                         break;
                                     }
+                                    else if ((Squares[file - distance, rank + distance]
+                                            & Pieces.ColorMask).Equals(Turn))
+                                    {
+                                        break;
+                                    }
                                 }
                                 //NE
                                 for (int distance = 1; distance < 8; distance++)
@@ -680,6 +705,11 @@
                                             & Pieces.ColorMask).Equals(Turn))
                                     {
                                         PseudoLegalMoves.Add(((file, rank), (file + distance, rank + distance), 0));
+                                        break;
+                                    }
+                                    else if ((Squares[file + distance, rank + distance]
+                                            & Pieces.ColorMask).Equals(Turn))
+                                    {
                                         break;
                                     }
                                 }
@@ -697,6 +727,11 @@
                                         PseudoLegalMoves.Add(((file, rank), (file + distance, rank - distance), 0));
                                         break;
                                     }
+                                    else if ((Squares[file + distance, rank - distance]
+                                            & Pieces.ColorMask).Equals(Turn))
+                                    {
+                                        break;
+                                    }
                                 }
                                 //SW
                                 for (int distance = 1; distance < 8; distance++)
@@ -710,6 +745,11 @@
                                             & Pieces.ColorMask).Equals(Turn))
                                     {
                                         PseudoLegalMoves.Add(((file, rank), (file - distance, rank - distance), 0));
+                                        break;
+                                    }
+                                    else if (!(Squares[file - distance, rank - distance]
+                                            & Pieces.ColorMask).Equals(Turn))
+                                    {
                                         break;
                                     }
                                 }
@@ -727,6 +767,11 @@
                                         PseudoLegalMoves.Add(((file, rank), (file, rank + distance), 0));
                                         break;
                                     }
+                                    else if ((Squares[file, rank + distance]
+                                            & Pieces.ColorMask).Equals(Turn))
+                                    {
+                                        break;
+                                    }
                                 }
                                 //E
                                 for (int distance = 1; distance < 8; distance++)
@@ -740,6 +785,11 @@
                                             & Pieces.ColorMask).Equals(Turn))
                                     {
                                         PseudoLegalMoves.Add(((file, rank), (file + distance, rank), 0));
+                                        break;
+                                    }
+                                    else if ((Squares[file + distance, rank]
+                                            & Pieces.ColorMask).Equals(Turn))
+                                    {
                                         break;
                                     }
                                 }
@@ -757,6 +807,11 @@
                                         PseudoLegalMoves.Add(((file, rank), (file, rank - distance), 0));
                                         break;
                                     }
+                                    else if ((Squares[file, rank - distance]
+                                            & Pieces.ColorMask).Equals(Turn))
+                                    {
+                                        break;
+                                    }
                                 }
                                 //W
                                 for (int distance = 1; distance < 8; distance++)
@@ -770,6 +825,11 @@
                                             & Pieces.ColorMask).Equals(Turn))
                                     {
                                         PseudoLegalMoves.Add(((file, rank), (file - distance, rank), 0));
+                                        break;
+                                    }
+                                    else if ((Squares[file - distance, rank]
+                                            & Pieces.ColorMask).Equals(Turn))
+                                    {
                                         break;
                                     }
                                 }
