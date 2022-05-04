@@ -11,7 +11,7 @@ namespace Karma_Chess
         {
             Board board = new Board(this);
             board.InitStartBoard();
-            board.drawBoard();
+            this.drawBoard(board);
         }
 
         //private void btPrintBoard_Click(object sender, EventArgs e)

@@ -2,6 +2,15 @@
 {
     public class Board
     {
+        //  0  1  2  3  4  5  6  7
+        //  8  9 10 11 12 13 14 15
+        // 16 17 18 19 20 21 22 23
+        // 24 25 26 27 28 29 30 31
+        // 32 33 34 35 36 37 38 39
+        // 40 41 42 43 44 45 46 47
+        // 48 49 50 51 52 53 54 55
+        // 56 57 58 59 60 61 62 63
+
         public Pieces[] Squares;
         public Turn Turn;
         public Castling Castling;
@@ -9,12 +18,13 @@
         public int EnPassantTarget;
         public int HalfmoveClock;
         public int FullmoveNumber;
-        public Form Mask;
+        public List<(int from, int to, int promote)> PseudoLegalMoves;
+
 
         public Board(Form mask)
         {
             Squares = new Pieces[64];
-            Mask = mask;
+            PseudoLegalMoves = new List<(int from, int to, int promote)>();
         }
 
         #region Board Inits
@@ -25,32 +35,8 @@
             InitFlags();
         }
 
-        public void drawBoard()
-        {
-            for (int i = 0; i<64; i++)
-            {
-                if (Squares[i] == Pieces.None)
-                {
-                    continue;
-                }
-
-                int x = i % 8;
-                int y = i / 8;
-                var piece = new Piece(x, y, Mask, Squares[i]);
-            }
-        }
-
         private void InitWhitePieces()
         {
-            //  0  1  2  3  4  5  6  7
-            //  8  9 10 11 12 13 14 15
-            // 16 17 18 19 20 21 22 23
-            // 24 25 26 27 28 29 30 31
-            // 32 33 34 35 36 37 38 39
-            // 40 41 42 43 44 45 46 47
-            // 48 49 50 51 52 53 54 55
-            // 56 57 58 59 60 61 62 63
-
             Squares[56] = Pieces.White | Pieces.Rook;
             Squares[57] = Pieces.White | Pieces.Knight;
             Squares[58] = Pieces.White | Pieces.Bishop;
@@ -227,5 +213,70 @@
         }
         #endregion
 
+        /// <summary>
+        /// Returns true if a move was made on the board, false otherwhise.
+        /// </summary>
+        /// <param name="from"></param>
+        /// <param name="to"></param>
+        /// <returns></returns>
+        public bool Move(int from, int to)
+        {
+            if (from < 0 || from > 63 || to < 0 || to > 63) return false;
+            return false;
+        }
+
+        public void CalculatePseudoLegalMoves()
+        {
+            for (int i = 0; i < Squares.Length; i++)
+            {
+                switch (Squares[i])
+                {
+                    case Pieces.Pawn:
+                        if (Squares[i].IsWhite())
+                        {
+                            // [8] 0  1  2  3  4  5  6  7
+                            // [7] 8  9  10 11 12 13 14 15
+                            // [6] 16 17 18 19 20 21 22 23
+                            // [5] 24 25 26 27 28 29 30 31
+                            // [4] 32 33 34 35 36 37 38 39
+                            // [3] 40 41 42 43 44 45 46 47
+                            // [2] 48 49 50 51 52 53 54 55
+                            // [1] 56 57 58 59 60 61 62 63
+                            //    [a][b][c][d][e][f][g][h]
+
+                            if (i > 48 || i < 56)
+                            {
+                                if (Squares[i - 8].IsEmpty() && Squares[i - 16].IsEmpty())
+                                {
+                                    //Move 2 ranks from rank 7
+                                    PseudoLegalMoves.Add((i, i - 16, 0));
+                                }
+                            }
+                            if (Squares[i - 8].IsEmpty())
+                            {
+                                PseudoLegalMoves.Add((i, i - 8, 0));
+                            }
+                        }
+                        else if (Squares[i].IsBlack())
+                        {
+
+                        }
+                        break;
+                    case Pieces.Knight:
+                        break;
+                    case Pieces.Bishop:
+                        break;
+                    case Pieces.Rook:
+                        break;
+                    case Pieces.Queen:
+                        break;
+                    case Pieces.King:
+                        break;
+                    case Pieces.None:
+                    default:
+                        break;
+                }
+            }
+        }
     }
 }
