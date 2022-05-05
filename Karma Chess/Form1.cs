@@ -15,7 +15,7 @@ namespace Karma_Chess
             //board.FenToBoard("r5k1/5ppp/1p5q/p1p5/8/1PP2PP1/1P1r4/R1Q2R1K w - - 1 27");
             //board.FenToBoard("r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq - ");
             this.DrawBoard(board);
-            board.CalculatePseudoLegalMoves();
+            board.CalculateLegalMoves();
         }
     }
 }
