@@ -16,6 +16,9 @@ namespace Karma_Chess
             //board.FenToBoard("r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq - ");
             this.DrawBoard(board);
             board.CalculateLegalMoves();
+
+            var controller = new Controller(board, Controls, this);
+
         }
     }
 }
