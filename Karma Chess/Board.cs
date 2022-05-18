@@ -1306,7 +1306,7 @@ namespace Karma_Chess
             {
                 if (file + distance > 7) break;
                 if ((!(tempSqares[file + distance, rank] & Pieces.ColorMask).Equals(Turn))
-                    && (tempSqares[file, rank + distance].IsRook() || tempSqares[file, rank + distance].IsQueen()))
+                    && (tempSqares[file + distance, rank ].IsRook() || tempSqares[file + distance, rank].IsQueen()))
                 {
                     return true;
                 }
@@ -1320,7 +1320,7 @@ namespace Karma_Chess
             {
                 if (rank - distance < 0) break;
                 if ((!(tempSqares[file, rank - distance] & Pieces.ColorMask).Equals(Turn))
-                    && (tempSqares[file, rank + distance].IsRook() || tempSqares[file, rank + distance].IsQueen()))
+                    && (tempSqares[file, rank - distance].IsRook() || tempSqares[file, rank - distance].IsQueen()))
                 {
                     return true;
                 }
@@ -1335,7 +1335,7 @@ namespace Karma_Chess
             {
                 if (file - distance < 0) break;
                 if ((!(tempSqares[file - distance, rank] & Pieces.ColorMask).Equals(Turn))
-                    && (tempSqares[file, rank + distance].IsRook() || tempSqares[file, rank + distance].IsQueen()))
+                    && (tempSqares[file - distance, rank ].IsRook() || tempSqares[file - distance, rank ].IsQueen()))
                 {
                     return true;
                 }
