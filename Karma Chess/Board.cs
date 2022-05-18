@@ -727,7 +727,7 @@ namespace Karma_Chess
                                         LegalMoves.Add(((file, rank), (file - distance, rank - distance), 0));
                                         break;
                                     }
-                                    else if (!(Squares[file - distance, rank - distance]
+                                    else if ((Squares[file - distance, rank - distance]
                                             & Pieces.ColorMask).Equals(Turn))
                                     {
                                         break;
@@ -895,7 +895,7 @@ namespace Karma_Chess
                                         LegalMoves.Add(((file, rank), (file - distance, rank - distance), 0));
                                         break;
                                     }
-                                    else if (!(Squares[file - distance, rank - distance]
+                                    else if ((Squares[file - distance, rank - distance]
                                             & Pieces.ColorMask).Equals(Turn))
                                     {
                                         break;
