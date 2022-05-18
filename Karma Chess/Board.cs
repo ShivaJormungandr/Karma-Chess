@@ -7,6 +7,8 @@ namespace Karma_Chess
         public Pieces[,] Squares;
         public Pieces Turn;
         public Castling Castling;
+        public bool CheckMate;
+        public bool IsInCkeck;
         //(-1,-1) For no target or the indexes for the EnPasant Sqare
         public (int, int) EnPassantTarget;
         public int HalfmoveClock;
@@ -19,6 +21,8 @@ namespace Karma_Chess
         public Board()
         {
             Squares = new Pieces[8, 8];
+            CheckMate = false;
+            IsInCkeck = false;
             LegalMoves = new List<((int file, int rank) from, (int file, int rank) to, int Special)>();
         }
 
@@ -357,6 +361,9 @@ namespace Karma_Chess
                 }
             }
 
+
+            IsInCkeck = CkeckIfKingInCheck(Turn.IsWhite() ? WhiteKingPosition : BlackKingPosition, Squares);
+
             return true;
         }
 
@@ -401,6 +408,7 @@ namespace Karma_Chess
                         switch (Squares[file, rank] & Pieces.PieceMask)
                         {
                             case Pieces.Pawn:
+                                if (IsInCkeck) break;
                                 if (Squares[file, rank].IsWhite())
                                 {
                                     #region White Pawn Moves
@@ -576,6 +584,7 @@ namespace Karma_Chess
                                 }
                                 break;
                             case Pieces.Knight:
+                                if (IsInCkeck) break;
                                 #region Knight Moves
                                 if (file - 2 >= 0 && rank + 1 <= 7)
                                 {
@@ -653,6 +662,7 @@ namespace Karma_Chess
                                 #endregion
                                 break;
                             case Pieces.Bishop:
+                                if (IsInCkeck) break;
                                 #region Bishop Moves
                                 //NW
                                 for (int distance = 1; distance < 8; distance++)
@@ -737,6 +747,7 @@ namespace Karma_Chess
                                 #endregion
                                 break;
                             case Pieces.Rook:
+                                if (IsInCkeck) break;
                                 #region Rook Moves
                                 //N
                                 for (int distance = 1; distance < 8; distance++)
@@ -821,6 +832,7 @@ namespace Karma_Chess
                                 #endregion
                                 break;
                             case Pieces.Queen:
+                                if (IsInCkeck) break;
                                 #region Queen Moves
                                 //NW
                                 for (int distance = 1; distance < 8; distance++)

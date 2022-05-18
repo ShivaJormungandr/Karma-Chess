@@ -24,6 +24,24 @@ namespace Karma_Chess
             }
         }
 
+        public static void EmptyBoard(this Form form)
+        {
+            //TODO: Implement this
+        }
+
+        public static void UpdateBoard(this Form form, Board board, 
+            PictureBox PictureToUpdate, PictureBox? PieceToDelete = null )
+        {
+            //TODO: Implement this
+            if(PieceToDelete != null)
+            {
+                //Delete PictureBox;
+            }
+
+            var Sqares = board.Squares;
+
+        }
+
         #region Piece Checks
         public static bool IsBlack(this Pieces piece)
         {
