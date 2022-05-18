@@ -53,7 +53,7 @@ namespace Karma_Chess
                 var selectedMove = LegalCertainMoves.Where(x => x.to.file == buttonFile && x.to.rank == buttonRank).ToList().First();
                 DeleteButtons();
 
-                if (board.Move(selectedMove.from, selectedMove.to))
+                if (board.Move(selectedMove.from, selectedMove.to, selectedMove.Special))
                 {
                     var pieceToMove = GetPieceToMove(selectedMove);
 

@@ -252,7 +252,7 @@ namespace Karma_Chess
         /// <param name="from"></param>
         /// <param name="to"></param>
         /// <returns></returns>
-        public bool Move((int file, int rank) from, (int file, int rank) to, int Special = 0)
+        public bool Move((int file, int rank) from, (int file, int rank) to, int Special)
         {
             if (from.file < 0 || from.rank < 0
                 || from.file > 7 || from.rank > 7
@@ -282,16 +282,27 @@ namespace Karma_Chess
                     }
                     if (Squares[from.file, from.rank].IsPawn())
                     {
-                        if ((to.rank == (from.rank + 2)))
+                        if (to.rank == (from.rank + 2))
                         {
                             EnPassantTarget = (to.file, to.rank + 1);
                         }
-                        if ((to.rank == (from.rank - 2)))
+                        if (to.rank == (from.rank - 2))
                         {
                             EnPassantTarget = (to.file, to.rank - 1);
                         }
+                        if((to.file == (from.file - 1) || to.file == (from.file + 1)) && Squares[to.file, to.rank].IsEmpty())
+                        {
+                            //If you capture an empty sqare with a pawn means EnPassant => Promotion
+                            newPiece = PromotePiece(oldPiece, Special) | color;
+                        }
                         HalfmoveClock = 0;
                     }
+
+                    if (Squares[from.file, from.rank].IsPawn())
+                    {
+
+                    }
+
                     Squares[to.file, to.rank] = newPiece;
                 }
                 Squares[from.file, from.rank] = Pieces.None;
@@ -469,8 +480,7 @@ namespace Karma_Chess
                                             }
                                             else
                                             {
-                                                //Pawn to Knight
-                                                LegalMoves.Add(((file, rank), (file - 1, rank + 1), 1));
+                                                LegalMoves.Add(((file, rank), (file - 1, rank + 1), 0));
                                             }
                                         }
                                     }
