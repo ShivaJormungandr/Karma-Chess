@@ -290,7 +290,7 @@ namespace Karma_Chess
                         {
                             EnPassantTarget = (to.file, to.rank - 1);
                         }
-                        if((to.file == (from.file - 1) || to.file == (from.file + 1)) && Squares[to.file, to.rank].IsEmpty())
+                        if ((to.file == (from.file - 1) || to.file == (from.file + 1)) && Squares[to.file, to.rank].IsEmpty())
                         {
                             //If you capture an empty sqare with a pawn means EnPassant => Promotion
                             newPiece = PromotePiece(oldPiece, Special) | color;
@@ -1115,7 +1115,10 @@ namespace Karma_Chess
         public void CalculateLegalMoves()
         {
             CalculatePseudoLegalMoves();
-            foreach (var move in LegalMoves)
+            List<((int file, int rank) from, (int file, int rank) to, int Special)> LegalMovesCopy = LegalMoves.ConvertAll(move => move);
+
+
+            foreach (var move in LegalMovesCopy)
             {
                 Pieces[,] tempSqares = Squares.Clone() as Pieces[,];
                 tempSqares[move.to.file, move.to.rank] = tempSqares[move.from.file, move.from.rank];
