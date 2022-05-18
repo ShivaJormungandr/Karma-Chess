@@ -260,10 +260,80 @@ namespace Karma_Chess
                 || to.file > 7 || to.rank > 7
                 ) return false;
 
-            Squares[to.file, to.rank] = Squares[from.file, from.rank];
-            Squares[from.file, from.rank] = Pieces.None;
+            if (Special == 0)
+            {
+                if (Squares[to.file, to.rank].IsQueen() || Squares[to.file, to.rank].IsKing())
+                {
+                    Squares[to.file, to.rank] = Squares[from.file, from.rank];
+                }
+                else
+                {
+                    var oldPiece = Squares[from.file, from.rank] & Pieces.PieceMask;
+                    var color = Squares[from.file, from.rank] & Pieces.ColorMask;
+                    var newPiece = PromotePiece(oldPiece, Special) | color;
+
+                    Squares[to.file, to.rank] = newPiece;
+                }
+                Squares[from.file, from.rank] = Pieces.None;
+            }
+            else if (Special == -1)
+            {
+                //Castling Queen Side
+                if (from.file > to.file)
+                {
+                    Squares[to.file, to.rank] = Squares[from.file, from.rank];
+                    Squares[3, from.rank] = Squares[0, from.rank];
+                    Squares[0, from.rank] = Pieces.None;
+                }
+                //Castling King Side
+                else
+                {
+                    Squares[to.file, to.rank] = Squares[from.file, from.rank];
+                    Squares[5, from.rank] = Squares[7, from.rank];
+                    Squares[7, from.rank] = Pieces.None;
+                }
+            }
+            else if (Special == 1 || Special == 2 || Special == 3 || Special == 4)
+            {
+                var pawn = Squares[from.file, from.rank] & Pieces.PieceMask;
+                var color = Squares[from.file, from.rank] & Pieces.ColorMask;
+                var promotedPawn = PromotePiece(pawn, Special) | color;
+
+                Squares[to.file, to.rank] = promotedPawn;
+                Squares[from.file, from.rank] = Pieces.None;
+            }
 
             return true;
+        }
+
+        private Pieces PromotePiece(Pieces piece, int special)
+        {
+            if (special == 0)
+            {
+                if (piece.IsPawn()) return Pieces.Knight;
+                if (piece.IsKnight()) return Pieces.Bishop;
+                if (piece.IsBishop()) return Pieces.Rook;
+                if (piece.IsRook()) return Pieces.Queen;
+            }
+            else if (special == 1)
+            {
+                return Pieces.Knight;
+            }
+            else if (special == 2)
+            {
+                return Pieces.Bishop;
+            }
+            else if (special == 3)
+            {
+                return Pieces.Rook;
+            }
+            else if (special == 4)
+            {
+                return Pieces.Queen;
+            }
+
+            //If it returned this something went wrong
+            return Pieces.None;
         }
 
         private void CalculatePseudoLegalMoves()
@@ -1002,13 +1072,13 @@ namespace Karma_Chess
                     if (move.Special == -1)
                     {
                         //Castling Queen Side
-                        if(move.from.file > move.to.file)
+                        if (move.from.file > move.to.file)
                         {
                             bool ckeckKingStart = CkeckIfKingInCheck(move.from, Squares);
                             bool ckeckKingPass = CkeckIfKingInCheck((WhiteKingPosition.file - 1, WhiteKingPosition.rank), Squares);
                             bool checkKingEnd = CkeckIfKingInCheck(move.to, tempSqares);
 
-                            if(ckeckKingStart || ckeckKingPass || checkKingEnd)
+                            if (ckeckKingStart || ckeckKingPass || checkKingEnd)
                             {
                                 LegalMoves.Remove(move);
                             }
@@ -1047,7 +1117,7 @@ namespace Karma_Chess
                 {
                     if (move.Special == -1)
                     {
-                       //Castling Queen Side
+                        //Castling Queen Side
                         if (move.from.file > move.to.file)
                         {
                             bool ckeckKingStart = CkeckIfKingInCheck(move.from, Squares);
