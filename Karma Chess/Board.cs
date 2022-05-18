@@ -252,14 +252,18 @@ namespace Karma_Chess
         /// <param name="from"></param>
         /// <param name="to"></param>
         /// <returns></returns>
-        public bool Move((int file, int rank) from, (int file, int rank) to, int Special)
+        public bool Move((int file, int rank) from, (int file, int rank) to, int Special = 0)
         {
             if (from.file < 0 || from.rank < 0
                 || from.file > 7 || from.rank > 7
                 || to.file < 0 || to.rank < 0
                 || to.file > 7 || to.rank > 7
                 ) return false;
-            return false;
+
+            Squares[to.file, to.rank] = Squares[from.file, from.rank];
+            Squares[from.file, from.rank] = Pieces.None;
+
+            return true;
         }
 
         private void CalculatePseudoLegalMoves()
