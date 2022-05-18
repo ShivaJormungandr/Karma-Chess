@@ -12,9 +12,10 @@ namespace Karma_Chess
         public int HalfmoveClock;
         public int FullmoveNumber;
         //Special holds Promotions if Pawn or Casttling if King
-        //Special defaul is 0, positive is promotion, negative is castling
+        //Special default is 0, positive is promotion, negative is castling
         public List<((int file, int rank) from, (int file, int rank) to, int Special)> LegalMoves;
-
+        private (int file, int rank) WhiteKingPosition;
+        private (int file, int rank) BlackKingPosition;
         public Board()
         {
             Squares = new Pieces[8, 8];
@@ -37,6 +38,7 @@ namespace Karma_Chess
             Squares[2, 0] = Pieces.White | Pieces.Bishop;
             Squares[3, 0] = Pieces.White | Pieces.Queen;
             Squares[4, 0] = Pieces.White | Pieces.King;
+            WhiteKingPosition = (4, 0);
             Squares[5, 0] = Pieces.White | Pieces.Bishop;
             Squares[6, 0] = Pieces.White | Pieces.Knight;
             Squares[7, 0] = Pieces.White | Pieces.Rook;
@@ -54,6 +56,7 @@ namespace Karma_Chess
             Squares[2, 7] = Pieces.Black | Pieces.Bishop;
             Squares[3, 7] = Pieces.Black | Pieces.Queen;
             Squares[4, 7] = Pieces.Black | Pieces.King;
+            BlackKingPosition = (4, 7);
             Squares[5, 7] = Pieces.Black | Pieces.Bishop;
             Squares[6, 7] = Pieces.Black | Pieces.Knight;
             Squares[7, 7] = Pieces.Black | Pieces.Rook;
@@ -128,6 +131,7 @@ namespace Karma_Chess
                         break;
                     case 'k':
                         Squares[fileCount, rankCount] = Pieces.Black | Pieces.King;
+                        BlackKingPosition = (fileCount, rankCount);
                         fileCount++;
                         break;
                     case 'P':
@@ -152,6 +156,7 @@ namespace Karma_Chess
                         break;
                     case 'K':
                         Squares[fileCount, rankCount] = Pieces.White | Pieces.King;
+                        WhiteKingPosition = (fileCount, rankCount);
                         fileCount++;
                         break;
                     case '/':
@@ -221,6 +226,11 @@ namespace Karma_Chess
             catch (Exception ex)
             {
                 //TODO: Log here
+            }
+            finally
+            {
+                HalfmoveClock = 0;
+                FullmoveNumber = 0;
             }
         }
         #endregion
@@ -983,9 +993,336 @@ namespace Karma_Chess
                 Pieces[,] tempSqares = Squares.Clone() as Pieces[,];
                 tempSqares[move.to.file, move.to.rank] = tempSqares[move.from.file, move.from.rank];
                 tempSqares[move.from.file, move.from.rank] = Pieces.None;
-                //TODO: Find king of turn color, check if in check, if yes remove from legal moves
+                if ((Turn & Pieces.White) == Pieces.White)
+                {
+                    if (move.Special == -1)
+                    {
+                        //Castling Queen Side
+                        if(move.from.file > move.to.file)
+                        {
+                            bool ckeckKingStart = CkeckIfKingInCheck(move.from, Squares);
+                            bool ckeckKingPass = CkeckIfKingInCheck((WhiteKingPosition.file - 1, WhiteKingPosition.rank), Squares);
+                            bool checkKingEnd = CkeckIfKingInCheck(move.to, tempSqares);
+
+                            if(ckeckKingStart || ckeckKingPass || checkKingEnd)
+                            {
+                                LegalMoves.Remove(move);
+                            }
+                        }
+                        //Castling King Side
+                        else
+                        {
+                            bool ckeckKingStart = CkeckIfKingInCheck(move.from, Squares);
+                            bool ckeckKingPass = CkeckIfKingInCheck((WhiteKingPosition.file + 1, WhiteKingPosition.rank), Squares);
+                            bool checkKingEnd = CkeckIfKingInCheck(move.to, tempSqares);
+
+                            if (ckeckKingStart || ckeckKingPass || checkKingEnd)
+                            {
+                                LegalMoves.Remove(move);
+                            }
+                        }
+                    }
+                    else if (tempSqares[move.to.file, move.to.rank].IsKing())
+                    {
+                        bool check = CkeckIfKingInCheck(move.to, tempSqares);
+                        if (check)
+                        {
+                            LegalMoves.Remove(move);
+                        }
+                    }
+                    else
+                    {
+                        bool check = CkeckIfKingInCheck(WhiteKingPosition, tempSqares);
+                        if (check)
+                        {
+                            LegalMoves.Remove(move);
+                        }
+                    }
+                }
+                else if ((Turn & Pieces.Black) == Pieces.Black)
+                {
+                    if (move.Special == -1)
+                    {
+                       //Castling Queen Side
+                        if (move.from.file > move.to.file)
+                        {
+                            bool ckeckKingStart = CkeckIfKingInCheck(move.from, Squares);
+                            bool ckeckKingPass = CkeckIfKingInCheck((BlackKingPosition.file - 1, BlackKingPosition.rank), Squares);
+                            bool checkKingEnd = CkeckIfKingInCheck(move.to, tempSqares);
+
+                            if (ckeckKingStart || ckeckKingPass || checkKingEnd)
+                            {
+                                LegalMoves.Remove(move);
+                            }
+                        }
+                        //Castling King Side
+                        else
+                        {
+                            bool ckeckKingStart = CkeckIfKingInCheck(move.from, Squares);
+                            bool ckeckKingPass = CkeckIfKingInCheck((BlackKingPosition.file + 1, BlackKingPosition.rank), Squares);
+                            bool checkKingEnd = CkeckIfKingInCheck(move.to, tempSqares);
+
+                            if (ckeckKingStart || ckeckKingPass || checkKingEnd)
+                            {
+                                LegalMoves.Remove(move);
+                            }
+                        }
+                    }
+                    else if (tempSqares[move.to.file, move.to.rank].IsKing())
+                    {
+                        bool check = CkeckIfKingInCheck(move.to, tempSqares);
+                        if (check)
+                        {
+                            LegalMoves.Remove(move);
+                        }
+                    }
+                    else
+                    {
+                        bool check = CkeckIfKingInCheck(BlackKingPosition, tempSqares);
+                        if (check)
+                        {
+                            LegalMoves.Remove(move);
+                        }
+                    }
+                }
+            }
+        }
+        /// <summary>
+        /// Returns True if the KingPosition is in check, else false
+        /// </summary>
+        /// <param name="KingPosition"></param>
+        private bool CkeckIfKingInCheck((int file, int rank) KingPosition, Pieces[,] tempSqares)
+        {
+            int file = KingPosition.file;
+            int rank = KingPosition.rank;
+
+            #region Queen Checks
+            #region Bishop Checks
+            //NW
+            for (int distance = 1; distance < 8; distance++)
+            {
+                if (file - distance < 0 || rank + distance > 7) break;
+                if ((!(tempSqares[file - distance, rank + distance] & Pieces.ColorMask).Equals(Turn))
+                    && (tempSqares[file - distance, rank + distance].IsBishop() || tempSqares[file - distance, rank + distance].IsQueen()))
+                {
+                    return true;
+                }
+                else if ((tempSqares[file - distance, rank + distance] & Pieces.ColorMask).Equals(Turn))
+                {
+                    break;
+                }
+            }
+            //NE
+            for (int distance = 1; distance < 8; distance++)
+            {
+                if (file + distance > 7 || rank + distance > 7) break;
+                if ((!(tempSqares[file + distance, rank + distance] & Pieces.ColorMask).Equals(Turn))
+                    && (tempSqares[file + distance, rank + distance].IsBishop() || tempSqares[file + distance, rank + distance].IsQueen()))
+                {
+                    return true;
+                }
+                else if ((tempSqares[file + distance, rank + distance] & Pieces.ColorMask).Equals(Turn))
+                {
+                    break;
+                }
+            }
+            //SE
+            for (int distance = 1; distance < 8; distance++)
+            {
+                if (file + distance > 7 || rank - distance < 0) break;
+                if ((!(tempSqares[file + distance, rank - distance] & Pieces.ColorMask).Equals(Turn))
+                    && (tempSqares[file + distance, rank - distance].IsBishop() || tempSqares[file + distance, rank - distance].IsQueen()))
+
+                {
+                    return true;
+                }
+                else if ((tempSqares[file + distance, rank - distance] & Pieces.ColorMask).Equals(Turn))
+                {
+                    break;
+                }
+            }
+            //SW
+            for (int distance = 1; distance < 8; distance++)
+            {
+                if (file - distance < 0 || rank - distance < 0) break;
+                if ((!(tempSqares[file - distance, rank - distance] & Pieces.ColorMask).Equals(Turn))
+                    && (tempSqares[file - distance, rank - distance].IsBishop() || tempSqares[file - distance, rank - distance].IsQueen()))
+                {
+                    return true;
+                }
+                else if (!(tempSqares[file - distance, rank - distance] & Pieces.ColorMask).Equals(Turn))
+                {
+                    break;
+                }
+            }
+            #endregion
+            #region Rook Checks
+            //N
+            for (int distance = 1; distance < 8; distance++)
+            {
+                if (rank + distance > 7) break;
+                if ((!(tempSqares[file, rank + distance] & Pieces.ColorMask).Equals(Turn))
+                    && (tempSqares[file, rank + distance].IsRook() || tempSqares[file, rank + distance].IsQueen()))
+                {
+                    return true;
+                }
+                else if ((tempSqares[file, rank + distance] & Pieces.ColorMask).Equals(Turn))
+                {
+                    break;
+                }
+            }
+            //E
+            for (int distance = 1; distance < 8; distance++)
+            {
+                if (file + distance > 7) break;
+                if ((!(tempSqares[file + distance, rank] & Pieces.ColorMask).Equals(Turn))
+                    && (tempSqares[file, rank + distance].IsRook() || tempSqares[file, rank + distance].IsQueen()))
+                {
+                    return true;
+                }
+                else if ((tempSqares[file + distance, rank] & Pieces.ColorMask).Equals(Turn))
+                {
+                    break;
+                }
+            }
+            //S
+            for (int distance = 1; distance < 8; distance++)
+            {
+                if (rank - distance < 0) break;
+                if ((!(tempSqares[file, rank - distance] & Pieces.ColorMask).Equals(Turn))
+                    && (tempSqares[file, rank + distance].IsRook() || tempSqares[file, rank + distance].IsQueen()))
+                {
+                    return true;
+                }
+                else if ((tempSqares[file, rank - distance]
+                        & Pieces.ColorMask).Equals(Turn))
+                {
+                    break;
+                }
+            }
+            //W
+            for (int distance = 1; distance < 8; distance++)
+            {
+                if (file - distance < 0) break;
+                if ((!(tempSqares[file - distance, rank] & Pieces.ColorMask).Equals(Turn))
+                    && (tempSqares[file, rank + distance].IsRook() || tempSqares[file, rank + distance].IsQueen()))
+                {
+                    return true;
+                }
+                else if ((tempSqares[file - distance, rank]
+                        & Pieces.ColorMask).Equals(Turn))
+                {
+                    break;
+                }
+            }
+            #endregion
+            #endregion
+
+            #region Knight Checks
+            if (file - 2 >= 0 && rank + 1 <= 7)
+            {
+                if (tempSqares[file - 2, rank + 1].IsKnight() && !(Squares[file - 2, rank + 1] & Pieces.ColorMask).Equals(Turn))
+                {
+                    return true;
+                }
+            }
+            if (file - 1 >= 0 && rank + 2 <= 7)
+            {
+                if (Squares[file - 1, rank + 2].IsKnight() && !(Squares[file - 1, rank + 2] & Pieces.ColorMask).Equals(Turn))
+                {
+                    return true;
+                }
+            }
+            if (file + 1 <= 7 && rank + 2 <= 7)
+            {
+                if (Squares[file + 1, rank + 2].IsKnight() && !(Squares[file + 1, rank + 2] & Pieces.ColorMask).Equals(Turn))
+                {
+                    return true;
+                }
+            }
+            if (file + 2 <= 7 && rank + 1 <= 7)
+            {
+                if (Squares[file + 2, rank + 1].IsKnight() && !(Squares[file + 2, rank + 1] & Pieces.ColorMask).Equals(Turn))
+                {
+                    return true;
+                }
 
             }
+            if (file + 2 <= 7 && rank - 1 >= 0)
+            {
+                if (Squares[file + 2, rank - 1].IsKnight() && !(Squares[file + 2, rank - 1] & Pieces.ColorMask).Equals(Turn))
+                {
+                    return true;
+                }
+            }
+            if (file + 1 <= 7 && rank - 2 >= 0)
+            {
+                if (Squares[file + 1, rank - 2].IsKnight() && !(Squares[file + 1, rank - 2] & Pieces.ColorMask).Equals(Turn))
+                {
+                    return true;
+                }
+            }
+            if (file - 1 >= 0 && rank - 2 >= 0)
+            {
+                if (Squares[file - 1, rank - 2].IsKnight() && !(Squares[file - 1, rank - 2] & Pieces.ColorMask).Equals(Turn))
+                {
+                    return true;
+                }
+            }
+            if (file - 2 >= 0 && rank - 1 >= 0)
+            {
+                if (Squares[file - 2, rank - 1].IsKnight() && !(Squares[file - 2, rank - 1] & Pieces.ColorMask).Equals(Turn))
+                {
+                    return true;
+                }
+            }
+            #endregion
+
+            #region Pawn Checks
+            //White King Black Pwans
+            if (Turn.IsWhite())
+            {
+                if (rank + 1 < 7)
+                {
+                    if (file - 1 > 0)
+                    {
+                        if ((tempSqares[file - 1, rank + 1] & Pieces.ColorMask).IsBlack() && tempSqares[file - 1, rank + 1].IsPawn())
+                        {
+                            return true;
+                        }
+                    }
+                    if (file + 1 < 7)
+                    {
+                        if ((tempSqares[file + 1, rank + 1] & Pieces.ColorMask).IsBlack() && tempSqares[file + 1, rank + 1].IsPawn())
+                        {
+                            return true;
+                        }
+                    }
+                }
+            }
+            //Black King White Pwans
+            if (Turn.IsBlack())
+            {
+                if (rank - 1 > 0)
+                {
+                    if (file - 1 > 0)
+                    {
+                        if ((tempSqares[file - 1, rank - 1] & Pieces.ColorMask).IsWhite() && tempSqares[file - 1, rank + 1].IsPawn())
+                        {
+                            return true;
+                        }
+                    }
+                    if (file + 1 < 7)
+                    {
+                        if ((tempSqares[file + 1, rank - 1] & Pieces.ColorMask).IsWhite() && tempSqares[file + 1, rank + 1].IsPawn())
+                        {
+                            return true;
+                        }
+                    }
+                }
+            }
+            #endregion
+            return false;
         }
     }
 }
