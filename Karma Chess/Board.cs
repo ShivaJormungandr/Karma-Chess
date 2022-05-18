@@ -260,6 +260,10 @@ namespace Karma_Chess
                 || to.file > 7 || to.rank > 7
                 ) return false;
 
+            EnPassantTarget = (-1, -1);
+            HalfmoveClock++;
+            FullmoveNumber++;
+
             if (Special == 0)
             {
                 if (Squares[to.file, to.rank].IsQueen() || Squares[to.file, to.rank].IsKing())
@@ -270,8 +274,24 @@ namespace Karma_Chess
                 {
                     var oldPiece = Squares[from.file, from.rank] & Pieces.PieceMask;
                     var color = Squares[from.file, from.rank] & Pieces.ColorMask;
-                    var newPiece = PromotePiece(oldPiece, Special) | color;
-
+                    var newPiece = Pieces.None;
+                    if (Squares[to.file, to.rank] != Pieces.None)
+                    {
+                        newPiece = PromotePiece(oldPiece, Special) | color;
+                        HalfmoveClock = 0;
+                    }
+                    if (Squares[from.file, from.rank].IsPawn())
+                    {
+                        if ((to.rank == (from.rank + 2)))
+                        {
+                            EnPassantTarget = (to.file, to.rank + 1);
+                        }
+                        if ((to.rank == (from.rank - 2)))
+                        {
+                            EnPassantTarget = (to.file, to.rank - 1);
+                        }
+                        HalfmoveClock = 0;
+                    }
                     Squares[to.file, to.rank] = newPiece;
                 }
                 Squares[from.file, from.rank] = Pieces.None;
@@ -301,6 +321,29 @@ namespace Karma_Chess
 
                 Squares[to.file, to.rank] = promotedPawn;
                 Squares[from.file, from.rank] = Pieces.None;
+
+                HalfmoveClock = 0;
+            }
+
+            if (Turn.IsWhite())
+            {
+                Turn = Pieces.Black;
+            }
+            else
+            {
+                Turn = Pieces.White;
+            }
+
+            if (Squares[to.file, to.rank].IsKing())
+            {
+                if (Squares[to.file, to.rank].IsWhite())
+                {
+                    WhiteKingPosition = to;
+                }
+                else
+                {
+                    BlackKingPosition = to;
+                }
             }
 
             return true;
