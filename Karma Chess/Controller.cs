@@ -23,6 +23,7 @@ namespace Karma_Chess
             this.mask = mask;
             controls = controlCollection;
             AddClickHandler();
+            LegalCertainMoves = new List<((int file, int rank) from, (int file, int rank) to, int Special)>();
         }
 
         public void AddClickHandler()
@@ -32,12 +33,14 @@ namespace Karma_Chess
                 control.MouseClick += ControlsMouseClick;
             }
         }
+
         public void ControlsMouseClick(object sender, MouseEventArgs args)
         {
-            DeleteButtons();
-
             if (sender is PictureBox piece)
             {
+                DeleteButtons();
+                board.CalculateLegalMoves();
+
                 var pieceFile = positionsFile.ToList().IndexOf(piece.Location.X);
                 var pieceRank = positionsRank.ToList().IndexOf(piece.Location.Y);
 
@@ -45,13 +48,28 @@ namespace Karma_Chess
             }
             else if (sender is Button button)
             {
+                var buttonFile = positionsFile.ToList().IndexOf(button.Location.X - 27);
+                var buttonRank = positionsRank.ToList().IndexOf(button.Location.Y - 27);
+                var selectedMove = LegalCertainMoves.Where(x => x.to.file == buttonFile && x.to.rank == buttonRank).ToList().First();
+                DeleteButtons();
 
+                if (board.Move(selectedMove.from, selectedMove.to))
+                {
+                    var pieceToMove = GetPieceToMove(selectedMove);
+
+                    if (pieceToMove != null)
+                    {
+                        pieceToMove.Location = new Point(positionsFile[selectedMove.to.file], positionsRank[selectedMove.to.rank]);
+                        mask.Controls.Add(pieceToMove);
+                        pieceToMove.MouseClick += ControlsMouseClick;
+                    }
+                }
             }
         }
 
         public void GetMovesFrom(int file, int rank)
         {
-            var LegalCertainMoves = board.LegalMoves.Where(x => x.from.file == file && x.from.rank == rank).ToList();
+            LegalCertainMoves = board.LegalMoves.Where(x => x.from.file == file && x.from.rank == rank).ToList();
 
             foreach (var move in LegalCertainMoves)
             {
@@ -62,18 +80,35 @@ namespace Karma_Chess
                 button.Visible = true;
                 mask.Controls.Add(button);
                 button.BringToFront();
+                button.MouseClick += ControlsMouseClick;
             }
         }
 
         public void DeleteButtons()
         {
-            foreach (var control in controls)
+            for (int i = 0; i < controls.Count; i++)
             {
-                if (control is Button)
+                if (controls[i] is Button)
                 {
-                    mask.Controls.Remove((Control)control);
+                    mask.Controls.RemoveAt(i);
+                    i--;
                 }
             }
+        }
+
+        public PictureBox GetPieceToMove(((int file, int rank) from, (int file, int rank) to, int Special) selectedMove)
+        {
+            foreach (Control control in controls)
+            {
+                if (control is PictureBox pictureBox)
+                {
+                    if (pictureBox.Location == new Point(positionsFile[selectedMove.from.file], positionsRank[selectedMove.from.rank]))
+                    {
+                        return pictureBox;
+                    }
+                }
+            }
+            return null;
         }
     }
 }
