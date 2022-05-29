@@ -90,19 +90,22 @@ namespace Karma_Chess
 
             board.Move(from, to, special);
 
-
+            this.EmptyBoard();
+            this.DrawBoard(board);
+            
             if (cbai.Checked)
             {
                 MakeBestMove();
+                this.EmptyBoard();
+                this.DrawBoard(board);
             }
-
         }
         private void MakeBestMove()
         {
             var mm = new MinMax();
 
             board.CalculateLegalMoves();
-            mm.MinMaxFunc(board, 2, int.MinValue, int.MaxValue, true, board.Turn);
+            mm.MinMaxFunc(board, 5, int.MinValue, int.MaxValue, true, board.Turn);
 
             var test = mm.bestMoveMinMix;
             board.Move(test.from, test.to, test.Special);

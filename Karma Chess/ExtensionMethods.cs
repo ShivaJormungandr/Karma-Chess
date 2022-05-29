@@ -28,7 +28,6 @@ namespace Karma_Chess
 
         public static void EmptyBoard(this Form form)
         {
-            //TODO: Implement this
             RemoveControls(form, typeof(PictureBox));
         }
 
