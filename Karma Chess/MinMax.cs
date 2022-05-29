@@ -45,8 +45,10 @@ namespace Karma_Chess
                         break;
                 }
             }
-            return whiteScore - blackScore;
-
+            if (maximizingColor.IsWhite())
+                return whiteScore - blackScore;
+            else
+                return blackScore - whiteScore;
         }
         private int GetPieceWorth(Pieces piece)
         {

@@ -1337,7 +1337,7 @@ namespace Karma_Chess
                 {
                     return true;
                 }
-                else if (!(tempSqares[file - distance, rank - distance] & Pieces.ColorMask).Equals(Turn))
+                else if ((tempSqares[file - distance, rank - distance] & Pieces.ColorMask).Equals(Turn))
                 {
                     break;
                 }

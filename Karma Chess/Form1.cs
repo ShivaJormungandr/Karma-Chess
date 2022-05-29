@@ -106,13 +106,19 @@ namespace Karma_Chess
             board.CalculateLegalMoves();
             mm.MinMaxFunc(board, 3, int.MinValue, int.MaxValue, true, board.Turn);
 
-            var test = mm.bestMoveMinMix;
-            board.Move(test.from, test.to, test.Special);
+            var bestMove = mm.bestMoveMinMix;
+            board.Move(bestMove.from, bestMove.to, bestMove.Special);
+            if (board.CheckMate)
+            {
+                //
+                var testWin = 1;
+            }
 
-            var pbfrom = GetPictureBox(test.from.file, test.from.rank);
-            var pbto = GetPictureBox(test.to.file, test.to.rank);
 
-            this.UpdateBoard(board, test.from, pbfrom, test.to, pbto);
+            var pbfrom = GetPictureBox(bestMove.from.file, bestMove.from.rank);
+            var pbto = GetPictureBox(bestMove.to.file, bestMove.to.rank);
+
+            this.UpdateBoard(board, bestMove.from, pbfrom, bestMove.to, pbto);
         }
 
         public PictureBox GetPictureBox(int file, int rank)
