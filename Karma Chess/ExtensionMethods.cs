@@ -71,6 +71,80 @@ namespace Karma_Chess
             {
                 form.Controls.Remove(PieceToDelete);
                 PieceToDelete.Dispose();
+
+                #region update
+
+                var pieceSqare = board.Squares[to.file, to.rank];
+
+                if (pieceSqare.IsBishop())
+                {
+                    if (pieceSqare.IsBlack())
+                    {
+                        PictureToUpdate.Image = Image.FromFile(Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.FullName + "\\Resources\\bishopB.png");
+                    }
+                    else if (pieceSqare.IsWhite())
+                    {
+                        PictureToUpdate.Image = Image.FromFile(Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.FullName + "\\Resources\\bishop.png");
+                    }
+                }
+                else if (pieceSqare.IsRook())
+                {
+                    if (pieceSqare.IsBlack())
+                    {
+                        PictureToUpdate.Image = Image.FromFile(Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.FullName + "\\Resources\\rookB.png");
+                    }
+                    else if (pieceSqare.IsWhite())
+                    {
+                        PictureToUpdate.Image = Image.FromFile(Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.FullName + "\\Resources\\rook.png");
+                    }
+                }
+                else if (pieceSqare.IsKnight())
+                {
+                    if (pieceSqare.IsBlack())
+                    {
+                        PictureToUpdate.Image = Image.FromFile(Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.FullName + "\\Resources\\knightB.png");
+                    }
+                    else if (pieceSqare.IsWhite())
+                    {
+                        PictureToUpdate.Image = Image.FromFile(Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.FullName + "\\Resources\\knight.png");
+                    }
+                }
+                else if (pieceSqare.IsPawn())
+                {
+                    if (pieceSqare.IsBlack())
+                    {
+                        PictureToUpdate.Image = Image.FromFile(Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.FullName + "\\Resources\\pawnB.png");
+                    }
+                    else if (pieceSqare.IsWhite())
+                    {
+                        PictureToUpdate.Image = Image.FromFile(Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.FullName + "\\Resources\\pawn.png");
+                    }
+                }
+                else if (pieceSqare.IsQueen())
+                {
+                    if (pieceSqare.IsBlack())
+                    {
+                        PictureToUpdate.Image = Image.FromFile(Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.FullName + "\\Resources\\queenB.png");
+                    }
+                    else if (pieceSqare.IsWhite())
+                    {
+                        PictureToUpdate.Image = Image.FromFile(Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.FullName + "\\Resources\\queen.png");
+                    }
+                }
+                else if (pieceSqare.IsKing())
+                {
+                    if (pieceSqare.IsBlack())
+                    {
+                        PictureToUpdate.Image = Image.FromFile(Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.FullName + "\\Resources\\kingB.png");
+                    }
+                    else if (pieceSqare.IsWhite())
+                    {
+                        PictureToUpdate.Image = Image.FromFile(Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.FullName + "\\Resources\\king.png");
+                    }
+                }
+
+                #endregion
+
             }
 
             PictureToUpdate.Location = new Point(positionsFile[to.file], positionsRank[to.rank]);
