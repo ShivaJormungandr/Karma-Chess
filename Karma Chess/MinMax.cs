@@ -32,21 +32,8 @@ namespace Karma_Chess
                     }
                 }
             }
-            if (board.IsInCkeck)
-            {
-                switch (board.Turn)
-                {
-                    case Pieces.White:
-                        whiteScore -= GetPieceWorth(Pieces.King);
-                        break;
-                    case Pieces.Black:
-                        blackScore -= GetPieceWorth(Pieces.King);
-                        break;
-                }
-            }
 
-            return whiteScore - blackScore;
-
+            return whiteScore - blackScore;          
         }
         private int GetPieceWorth(Pieces piece)
         {
@@ -70,7 +57,7 @@ namespace Karma_Chess
             return 0;
         }
 
-        public int MinMaxFunc(Board board, int depth, int alpha, int beta, bool maximizingPlayer, Pieces maximizingColor)
+        public int MinMaxFunc(Board board, int depth,int alpha, int beta, bool maximizingPlayer, Pieces maximizingColor)
         {
             count++;
             if (depth == 0 || board.LegalMoves.Count == 0 || board.CheckMate)
@@ -82,45 +69,45 @@ namespace Karma_Chess
 
             if (maximizingPlayer)
             {
-                int maxEval = int.MinValue;
+                int value = int.MinValue;
                 foreach (var move in board.LegalMoves)
                 {
                     var boardClone = board.CopyObject<Board>();
                     _ = boardClone.Move(move.from, move.to, move.Special);
                     boardClone.CalculateLegalMoves();
 
-                    int eval = MinMaxFunc(boardClone, depth - 1, alpha, beta, !maximizingPlayer, maximizingColor);
-                    if (eval > maxEval)
+                    int minmaxResult = MinMaxFunc(boardClone, depth - 1, alpha, beta, !maximizingPlayer, maximizingColor);
+                    if (value > minmaxResult)
                     {
                         bestMove = move;
                     }
-                    maxEval = Math.Max(maxEval, eval);
-                    alpha = Math.Max(alpha, eval);
+                    value = Math.Max(value, minmaxResult);
+                    alpha = Math.Max(alpha, minmaxResult);
                     if (beta <= alpha) break;
                 }
                 bestMoveMinMix = bestMove;
-                return maxEval;
+                return value;
             }
             else
             {
-                int minEval = int.MaxValue;
+                int value = int.MaxValue;
                 foreach (var move in board.LegalMoves)
                 {
                     var boardClone = board.CopyObject<Board>();
                     _ = boardClone.Move(move.from, move.to, move.Special);
                     boardClone.CalculateLegalMoves();
 
-                    int eval = MinMaxFunc(boardClone, depth - 1, alpha, beta, maximizingPlayer, maximizingColor);
-                    if (eval < minEval)
+                    int minmaxResult = MinMaxFunc(boardClone, depth - 1, alpha, beta, maximizingPlayer, maximizingColor);
+                    if (value < minmaxResult)
                     {
                         bestMove = move;
                     }
-                    minEval = Math.Min(minEval, eval);
-                    beta = Math.Min(beta, eval);
-                    if (beta <= alpha) break;
+                    value = Math.Min(value, minmaxResult);
+                    beta = Math.Min(beta, minmaxResult);
+                    if(beta <= alpha) break;
                 }
                 bestMoveMinMix = bestMove;
-                return minEval;
+                return value;
             }
 
         }
