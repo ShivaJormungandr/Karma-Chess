@@ -71,12 +71,9 @@ namespace Karma_Chess
             {
                 form.Controls.Remove(PieceToDelete);
                 PieceToDelete.Dispose();
-                board.Squares[to.file, to.rank] = Pieces.None;
             }
 
             PictureToUpdate.Location = new Point(positionsFile[to.file], positionsRank[to.rank]);
-
-            board.Squares[to.file, to.rank] = board.Squares[from.file, from.rank];
         }
 
         public static T CopyObject<T>(this object objSource)
