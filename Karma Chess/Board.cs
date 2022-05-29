@@ -328,12 +328,13 @@ namespace Karma_Chess
                 if (Squares[to.file, to.rank].IsQueen() || Squares[to.file, to.rank].IsKing())
                 {
                     Squares[to.file, to.rank] = Squares[from.file, from.rank];
+                    Squares[from.file, from.rank] = Pieces.None;
                 }
                 else
                 {
                     var oldPiece = Squares[from.file, from.rank] & Pieces.PieceMask;
                     var color = Squares[from.file, from.rank] & Pieces.ColorMask;
-                    var newPiece = Pieces.None;
+                    var newPiece = Squares[from.file, from.rank];
                     if (Squares[to.file, to.rank] != Pieces.None)
                     {
                         newPiece = PromotePiece(oldPiece, Special) | color;
@@ -460,6 +461,8 @@ namespace Karma_Chess
                 if (piece.IsKnight()) return Pieces.Bishop;
                 if (piece.IsBishop()) return Pieces.Rook;
                 if (piece.IsRook()) return Pieces.Queen;
+                if (piece.IsQueen()) return Pieces.Queen;
+                if (piece.IsKing()) return Pieces.King;
             }
             else if (special == 1)
             {

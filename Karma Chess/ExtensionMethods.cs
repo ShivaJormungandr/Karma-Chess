@@ -29,13 +29,45 @@ namespace Karma_Chess
         public static void EmptyBoard(this Form form)
         {
             //TODO: Implement this
+            RemoveControls(form, typeof(PictureBox));
         }
 
-        public static void UpdateBoard(this Form form, Board board, 
-            PictureBox PictureToUpdate, PictureBox? PieceToDelete = null )
+        private static void RemoveControls(Control control, Type type)
+        {
+            List<Control> controls = new List<Control>();
+
+            Stack<Control> stack = new Stack<Control>();
+            stack.Push(control);
+
+            while (stack.Count > 0)
+            {
+                Control ctrl = stack.Pop();
+                foreach (Control child in ctrl.Controls)
+                {
+                    if (child.GetType() == type)
+                    {
+                        controls.Add(child);
+                    }
+                    else if (true == child.HasChildren)
+                    {
+                        stack.Push(child);
+                    }
+                }
+            }
+
+            foreach (Control ctrl in controls)
+            {
+                control.Controls.Remove(ctrl);
+
+                ctrl.Dispose();
+            }
+        }
+
+        public static void UpdateBoard(this Form form, Board board,
+            PictureBox PictureToUpdate, PictureBox? PieceToDelete = null)
         {
             //TODO: Implement this
-            if(PieceToDelete != null)
+            if (PieceToDelete != null)
             {
                 //Delete PictureBox;
             }

@@ -38,6 +38,8 @@ namespace Karma_Chess
         private void btBestMove_Click(object sender, EventArgs e)
         {
             MakeBestMove();
+            this.EmptyBoard();
+            this.DrawBoard(board);
         }
 
         private void btMove_Click(object sender, EventArgs e)
@@ -100,11 +102,10 @@ namespace Karma_Chess
             var mm = new MinMax();
 
             board.CalculateLegalMoves();
-            mm.MinMaxFunc(board, 3, int.MinValue, int.MaxValue, true, board.Turn);
+            mm.MinMaxFunc(board, 2, int.MinValue, int.MaxValue, true, board.Turn);
 
             var test = mm.bestMoveMinMix;
             board.Move(test.from, test.to, test.Special);
-
         }
     }
 }
