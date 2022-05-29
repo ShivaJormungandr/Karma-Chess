@@ -38,8 +38,6 @@ namespace Karma_Chess
         private void btBestMove_Click(object sender, EventArgs e)
         {
             MakeBestMove();
-            this.EmptyBoard();
-            this.DrawBoard(board);
         }
 
         private void btMove_Click(object sender, EventArgs e)
@@ -90,14 +88,15 @@ namespace Karma_Chess
 
             board.Move(from, to, special);
 
-            this.EmptyBoard();
-            this.DrawBoard(board);
-            
+            var pbfrom = GetPictureBox(from.file, from.rank);
+            var pbto = GetPictureBox(to.file, to.rank);
+
+            this.UpdateBoard(board, from, pbfrom, to, pbto);
+            Refresh();
+
             if (cbai.Checked)
             {
                 MakeBestMove();
-                this.EmptyBoard();
-                this.DrawBoard(board);
             }
         }
         private void MakeBestMove()
@@ -105,10 +104,30 @@ namespace Karma_Chess
             var mm = new MinMax();
 
             board.CalculateLegalMoves();
-            mm.MinMaxFunc(board, 5, int.MinValue, int.MaxValue, true, board.Turn);
+            mm.MinMaxFunc(board, 2, int.MinValue, int.MaxValue, true, board.Turn);
 
             var test = mm.bestMoveMinMix;
             board.Move(test.from, test.to, test.Special);
+
+            var pbfrom = GetPictureBox(test.from.file, test.from.rank);
+            var pbto = GetPictureBox(test.to.file, test.to.rank);
+
+            this.UpdateBoard(board, test.from, pbfrom, test.to, pbto);
+        }
+
+        public PictureBox GetPictureBox(int file, int rank)
+        {
+            int[] positionsFile = { 6, 75, 144, 213, 282, 352, 420, 489 };
+            int[] positionsRank = { 489, 420, 351, 282, 213, 144, 75, 6 };
+
+            foreach (Control control in Controls)
+            {
+                if (control is PictureBox pictureBox && pictureBox.Location == new Point(positionsFile[file], positionsRank[rank]))
+                {
+                    return pictureBox;
+                }
+            }
+            return null;
         }
     }
 }

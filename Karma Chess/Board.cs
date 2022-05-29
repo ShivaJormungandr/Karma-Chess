@@ -296,7 +296,7 @@ namespace Karma_Chess
 
         #region Helper Methods
 
-        public (int, int) AlgebircToBoardIndex(string algebircNotation)
+        public (int file, int rank) AlgebircToBoardIndex(string algebircNotation)
         {
             int file = algebircNotation[0] - 97;
             int rank = (int)char.GetNumericValue(algebircNotation[1]) - 1;

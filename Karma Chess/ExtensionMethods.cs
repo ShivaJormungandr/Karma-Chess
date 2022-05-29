@@ -62,17 +62,21 @@ namespace Karma_Chess
             }
         }
 
-        public static void UpdateBoard(this Form form, Board board,
-            PictureBox PictureToUpdate, PictureBox? PieceToDelete = null)
+        public static void UpdateBoard(this Form form, Board board, (int file, int rank) from, PictureBox PictureToUpdate, (int file, int rank) to, PictureBox? PieceToDelete = null)
         {
-            //TODO: Implement this
+            int[] positionsFile = { 6, 75, 144, 213, 282, 352, 420, 489 };
+            int[] positionsRank = { 489, 420, 351, 282, 213, 144, 75, 6 };
+
             if (PieceToDelete != null)
             {
-                //Delete PictureBox;
+                form.Controls.Remove(PieceToDelete);
+                PieceToDelete.Dispose();
+                board.Squares[to.file, to.rank] = Pieces.None;
             }
 
-            var Sqares = board.Squares;
+            PictureToUpdate.Location = new Point(positionsFile[to.file], positionsRank[to.rank]);
 
+            board.Squares[to.file, to.rank] = board.Squares[from.file, from.rank];
         }
 
         public static T CopyObject<T>(this object objSource)
