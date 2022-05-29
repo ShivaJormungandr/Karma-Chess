@@ -12,14 +12,49 @@ namespace Karma_Chess
         private int count = 0;
         private int Evaluate(Board board, Pieces maximizingColor)
         {
-            if (maximizingColor == Pieces.White)
+            var whiteScore = 0;
+            var blackScore = 0;
+            foreach (var sqare in board.Squares)
             {
-                return board.WhiteScore - board.BlackScore;
+                if (sqare != Pieces.None)
+                {
+                    var pieceColor = sqare & Pieces.ColorMask;
+                    var piece = sqare & Pieces.PieceMask;
+
+                    switch (pieceColor)
+                    {
+                        case Pieces.White:
+                            whiteScore += GetPieceWorth(piece);
+                            break;
+                        case Pieces.Black:
+                            blackScore += GetPieceWorth(piece);
+                            break;
+                    }
+                }
             }
-            else
+
+            return whiteScore - blackScore;          
+        }
+        private int GetPieceWorth(Pieces piece)
+        {
+            //TODO: Get rid of the magic numbers
+            switch (piece)
             {
-                return board.BlackScore - board.WhiteScore;
+                case Pieces.Pawn:
+                    return 10;
+                case Pieces.Knight:
+                    return 30;
+                case Pieces.Bishop:
+                    return 30;
+                case Pieces.Rook:
+                    return 50;
+                case Pieces.Queen:
+                    return 90;
+                case Pieces.King:
+                    return 900;
             }
+
+            return 0;
         }
 
         public int MinMaxFunc(Board board, int depth,int alpha, int beta, bool maximizingPlayer, Pieces maximizingColor)
