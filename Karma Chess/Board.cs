@@ -499,7 +499,7 @@ namespace Karma_Chess
                                             }
                                             else
                                             {
-                                                LegalMoves.Add(((file, rank), (file + 1, rank + 1), 0));
+                                                LegalMoves.Add(((file, rank), (file + 1, rank + 1), 1));
                                             }
                                         }
                                     }
@@ -524,7 +524,7 @@ namespace Karma_Chess
                                             }
                                             else
                                             {
-                                                LegalMoves.Add(((file, rank), (file - 1, rank + 1), 0));
+                                                LegalMoves.Add(((file, rank), (file - 1, rank + 1), 1));
                                             }
                                         }
                                     }
@@ -585,7 +585,7 @@ namespace Karma_Chess
                                             }
                                             else
                                             {
-                                                LegalMoves.Add(((file, rank), (file + 1, rank - 1), 0));
+                                                LegalMoves.Add(((file, rank), (file + 1, rank - 1), 1));
                                             }
                                         }
                                     }
@@ -1267,13 +1267,16 @@ namespace Karma_Chess
                 }
             }
 
-            //LegalMoves.Sort()
+            LegalMoves.OrderByDescending(m => m.Special).ToList();
 
             if (IsInCkeck && LegalMoves.Count == 0)
             {
-                CheckMate = true;
+                //CheckMate = true;
             }
         }
+
+
+
         /// <summary>
         /// Returns True if the KingPosition is in check, else false
         /// </summary>
@@ -1308,7 +1311,7 @@ namespace Karma_Chess
                 {
                     return true;
                 }
-                else if ((tempSqares[file + distance, rank + distance] & Pieces.ColorMask).Equals(Turn))
+                else if ((tempSqares[file + distance, rank + distance] & Pieces.ColorMask).Equals(Turn) )
                 {
                     break;
                 }
@@ -1337,7 +1340,7 @@ namespace Karma_Chess
                 {
                     return true;
                 }
-                else if (!(tempSqares[file - distance, rank - distance] & Pieces.ColorMask).Equals(Turn))
+                else if ((tempSqares[file - distance, rank - distance] & Pieces.ColorMask).Equals(Turn))
                 {
                     break;
                 }

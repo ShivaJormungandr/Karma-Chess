@@ -106,6 +106,11 @@ namespace Karma_Chess
             var mm = new MinMax();
 
             board.CalculateLegalMoves();
+            if(board.LegalMoves.Count == 0)
+            {
+                var winerHere = 1;
+                return;
+            }
             mm.MinMaxFunc(board, 3, int.MinValue, int.MaxValue, true, board.Turn);
 
             var test = mm.bestMoveMinMix;
