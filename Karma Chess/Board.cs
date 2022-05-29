@@ -20,9 +20,6 @@ namespace Karma_Chess
         public List<((int file, int rank) from, (int file, int rank) to, int Special)> LegalMoves;
         private (int file, int rank) WhiteKingPosition;
         private (int file, int rank) BlackKingPosition;
-        //Scores for heuristic evaluation funcion
-        public int WhiteScore;
-        public int BlackScore;
 
         public Board()
         {
@@ -87,7 +84,6 @@ namespace Karma_Chess
             EnPassantTarget = (-1, -1);
             HalfmoveClock = 0;
             FullmoveNumber = 0;
-            CalcutateScores();
         }
 
         public void FenToBoard(string fen)
@@ -243,55 +239,8 @@ namespace Karma_Chess
                 HalfmoveClock = 0;
                 FullmoveNumber = 0;
             }
-
-            CalcutateScores();
         }
 
-        private void CalcutateScores()
-        {
-            WhiteScore = 0;
-            BlackScore = 0;
-            foreach (var sqare in Squares)
-            {
-                if (sqare != Pieces.None)
-                {
-                    var pieceColor = sqare & Pieces.ColorMask;
-                    var piece = sqare & Pieces.PieceMask;
-
-                    switch (pieceColor)
-                    {
-                        case Pieces.White:
-                            WhiteScore += GetPieceWorth(piece);
-                            break;
-                        case Pieces.Black:
-                            BlackScore += GetPieceWorth(piece);
-                            break;
-                    }
-                }
-            }
-        }
-
-        private int GetPieceWorth(Pieces piece)
-        {
-            //TODO: Get rid of the magic numbers
-            switch (piece)
-            {
-                case Pieces.Pawn:
-                    return 10;
-                case Pieces.Knight:
-                    return 30;
-                case Pieces.Bishop:
-                    return 30;
-                case Pieces.Rook:
-                    return 50;
-                case Pieces.Queen:
-                    return 90;
-                case Pieces.King:
-                    return 900;
-            }
-
-            return 0;
-        }
         #endregion
 
         #region Helper Methods
@@ -325,10 +274,9 @@ namespace Karma_Chess
 
             if (Special == 0)
             {
-                if (Squares[to.file, to.rank].IsQueen() || Squares[to.file, to.rank].IsKing())
+                if (Squares[from.file, from.rank].IsQueen() || Squares[from.file, from.rank].IsKing())
                 {
                     Squares[to.file, to.rank] = Squares[from.file, from.rank];
-                    Squares[from.file, from.rank] = Pieces.None;
                 }
                 else
                 {
@@ -449,7 +397,6 @@ namespace Karma_Chess
 
             IsInCkeck = CkeckIfKingInCheck(Turn.IsWhite() ? WhiteKingPosition : BlackKingPosition, Squares);
 
-            CalcutateScores();
             return true;
         }
 
@@ -620,7 +567,7 @@ namespace Karma_Chess
                                     //Captures (1 rank diagonal and EnPassant)
                                     if (file + 1 <= 7)
                                     {
-                                        if ((Squares[file + 1, rank - 1].IsBlack()
+                                        if ((Squares[file + 1, rank - 1].IsWhite()
                                             || (file + 1, rank - 1).Equals(EnPassantTarget))
                                             && !Squares[file + 1, rank - 1].IsKing())
                                         {
@@ -645,7 +592,7 @@ namespace Karma_Chess
 
                                     if (file - 1 >= 0)
                                     {
-                                        if ((Squares[file - 1, rank - 1].IsBlack()
+                                        if ((Squares[file - 1, rank - 1].IsWhite()
                                             || (file - 1, rank - 1).Equals(EnPassantTarget))
                                             && !Squares[file - 1, rank - 1].IsKing())
                                         {
@@ -1320,6 +1267,7 @@ namespace Karma_Chess
                 }
             }
 
+            //LegalMoves.Sort()
 
             if (IsInCkeck && LegalMoves.Count == 0)
             {
@@ -1561,7 +1509,20 @@ namespace Karma_Chess
                 }
             }
             #endregion
+
+            #region Kinkg Next To King
+            if (file + 1 <= 7 && tempSqares[file + 1, rank].IsKing()) return true;
+            if (file - 1 >= 0 && tempSqares[file - 1, rank].IsKing()) return true;
+            if (rank + 1 <= 7 && tempSqares[file, rank + 1].IsKing()) return true;
+            if (rank - 1 >= 0 && tempSqares[file, rank - 1].IsKing()) return true;
+
+            if (file + 1 <= 7 && rank + 1 <= 7 && tempSqares[file + 1, rank + 1].IsKing()) return true;
+            if (file + 1 <= 7 && rank - 1 >= 0 && tempSqares[file + 1, rank - 1].IsKing()) return true;
+            if (file - 1 >= 0 && rank - 1 >= 0 && tempSqares[file - 1, rank - 1].IsKing()) return true;
+            if (file - 1 >= 0 && rank + 1 <= 7 && tempSqares[file - 1, rank + 1].IsKing()) return true;
+            #endregion
             return false;
         }
+
     }
 }
