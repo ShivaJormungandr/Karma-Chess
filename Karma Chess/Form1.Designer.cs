@@ -32,6 +32,10 @@
             this.tbFen = new System.Windows.Forms.TextBox();
             this.btStartGame = new System.Windows.Forms.Button();
             this.btEmptyBoard = new System.Windows.Forms.Button();
+            this.cbai = new System.Windows.Forms.CheckBox();
+            this.tbMove = new System.Windows.Forms.TextBox();
+            this.btMove = new System.Windows.Forms.Button();
+            this.btBestMove = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // lbFen
@@ -76,6 +80,49 @@
             this.btEmptyBoard.UseWaitCursor = true;
             this.btEmptyBoard.Click += new System.EventHandler(this.btEmptyBoard_Click);
             // 
+            // cbai
+            // 
+            this.cbai.AutoSize = true;
+            this.cbai.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.cbai.Location = new System.Drawing.Point(575, 120);
+            this.cbai.Name = "cbai";
+            this.cbai.Size = new System.Drawing.Size(48, 29);
+            this.cbai.TabIndex = 4;
+            this.cbai.Text = "AI";
+            this.cbai.UseVisualStyleBackColor = true;
+            // 
+            // tbMove
+            // 
+            this.tbMove.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.tbMove.Location = new System.Drawing.Point(575, 152);
+            this.tbMove.Name = "tbMove";
+            this.tbMove.Size = new System.Drawing.Size(161, 32);
+            this.tbMove.TabIndex = 1;
+            this.tbMove.Text = "x9x9-p";
+            // 
+            // btMove
+            // 
+            this.btMove.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.btMove.Location = new System.Drawing.Point(742, 152);
+            this.btMove.Name = "btMove";
+            this.btMove.Size = new System.Drawing.Size(159, 32);
+            this.btMove.TabIndex = 2;
+            this.btMove.Text = "Move";
+            this.btMove.UseVisualStyleBackColor = true;
+            this.btMove.UseWaitCursor = true;
+            this.btMove.Click += new System.EventHandler(this.btMove_Click);
+            // 
+            // btBestMove
+            // 
+            this.btBestMove.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.btBestMove.Location = new System.Drawing.Point(575, 190);
+            this.btBestMove.Name = "btBestMove";
+            this.btBestMove.Size = new System.Drawing.Size(326, 32);
+            this.btBestMove.TabIndex = 5;
+            this.btBestMove.Text = "Make Best Move";
+            this.btBestMove.UseVisualStyleBackColor = true;
+            this.btBestMove.Click += new System.EventHandler(this.btBestMove_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -83,8 +130,12 @@
             this.BackgroundImage = global::Karma_Chess.Properties.Resources.Chess_Board;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
             this.ClientSize = new System.Drawing.Size(913, 559);
+            this.Controls.Add(this.btBestMove);
+            this.Controls.Add(this.cbai);
             this.Controls.Add(this.btEmptyBoard);
+            this.Controls.Add(this.btMove);
             this.Controls.Add(this.btStartGame);
+            this.Controls.Add(this.tbMove);
             this.Controls.Add(this.tbFen);
             this.Controls.Add(this.lbFen);
             this.Name = "Form1";
@@ -101,5 +152,9 @@
         private TextBox tbFen;
         private Button btStartGame;
         private Button btEmptyBoard;
+        private CheckBox cbai;
+        private TextBox tbMove;
+        private Button btMove;
+        private Button btBestMove;
     }
 }

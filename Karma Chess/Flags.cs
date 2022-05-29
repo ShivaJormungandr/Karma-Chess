@@ -19,13 +19,6 @@
     }
 
     [Flags]
-    public enum Turn
-    {
-        White = 0,
-        Black = 1,
-    }
-
-    [Flags]
     public enum Castling
     {
         None = 0b0000,

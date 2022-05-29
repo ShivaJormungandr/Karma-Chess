@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -40,6 +42,17 @@ namespace Karma_Chess
 
             var Sqares = board.Squares;
 
+        }
+
+        public static T CopyObject<T>(this object objSource)
+        {
+            using (MemoryStream stream = new MemoryStream())
+            {
+                BinaryFormatter formatter = new BinaryFormatter();
+                formatter.Serialize(stream, objSource);
+                stream.Position = 0;
+                return (T)formatter.Deserialize(stream);
+            }
         }
 
         #region Piece Checks

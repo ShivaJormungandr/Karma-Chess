@@ -1,7 +1,9 @@
 ﻿using System.Linq;
+using System.Runtime.Serialization.Formatters.Binary;
 
 namespace Karma_Chess
 {
+    [Serializable]
     public class Board
     {
         public Pieces[,] Squares;
@@ -18,6 +20,10 @@ namespace Karma_Chess
         public List<((int file, int rank) from, (int file, int rank) to, int Special)> LegalMoves;
         private (int file, int rank) WhiteKingPosition;
         private (int file, int rank) BlackKingPosition;
+        //Scores for heuristic evaluation funcion
+        public int WhiteScore;
+        public int BlackScore;
+
         public Board()
         {
             Squares = new Pieces[8, 8];
@@ -81,6 +87,7 @@ namespace Karma_Chess
             EnPassantTarget = (-1, -1);
             HalfmoveClock = 0;
             FullmoveNumber = 0;
+            CalcutateScores();
         }
 
         public void FenToBoard(string fen)
@@ -236,12 +243,60 @@ namespace Karma_Chess
                 HalfmoveClock = 0;
                 FullmoveNumber = 0;
             }
+
+            CalcutateScores();
+        }
+
+        private void CalcutateScores()
+        {
+            WhiteScore = 0;
+            BlackScore = 0;
+            foreach (var sqare in Squares)
+            {
+                if (sqare != Pieces.None)
+                {
+                    var pieceColor = sqare & Pieces.ColorMask;
+                    var piece = sqare & Pieces.PieceMask;
+
+                    switch (pieceColor)
+                    {
+                        case Pieces.White:
+                            WhiteScore += GetPieceWorth(piece);
+                            break;
+                        case Pieces.Black:
+                            BlackScore += GetPieceWorth(piece);
+                            break;
+                    }
+                }
+            }
+        }
+
+        private int GetPieceWorth(Pieces piece)
+        {
+            //TODO: Get rid of the magic numbers
+            switch (piece)
+            {
+                case Pieces.Pawn:
+                    return 10;
+                case Pieces.Knight:
+                    return 30;
+                case Pieces.Bishop:
+                    return 30;
+                case Pieces.Rook:
+                    return 50;
+                case Pieces.Queen:
+                    return 90;
+                case Pieces.King:
+                    return 900;
+            }
+
+            return 0;
         }
         #endregion
 
         #region Helper Methods
 
-        private (int, int) AlgebircToBoardIndex(string algebircNotation)
+        public (int, int) AlgebircToBoardIndex(string algebircNotation)
         {
             int file = algebircNotation[0] - 97;
             int rank = (int)char.GetNumericValue(algebircNotation[1]) - 1;
@@ -301,9 +356,28 @@ namespace Karma_Chess
                         }
                         HalfmoveClock = 0;
                     }
-
-                    if (Squares[from.file, from.rank].IsPawn())
+                    if (Squares[from.file, from.rank].IsRook())
                     {
+                        //If rook moves unset castling flag
+                        var rookColor = Squares[from.file, from.rank] & Pieces.ColorMask;
+
+                        if ((Castling & Castling.WhiteKingSide) == Castling.WhiteKingSide && (from.file == 7 && from.rank == 0))
+                        {
+                            Castling = Castling & ~Castling.WhiteKingSide;
+                        }
+                        else if ((Castling & Castling.WhiteQueenSide) == Castling.WhiteQueenSide && (from.file == 0 && from.rank == 0))
+                        {
+                            Castling = Castling & ~Castling.WhiteQueenSide;
+                        }
+                        else if ((Castling & Castling.BlackKingSide) == Castling.BlackKingSide && (from.file == 7 && from.rank == 7))
+                        {
+                            Castling = Castling & ~Castling.BlackKingSide;
+
+                        }
+                        else if ((Castling & Castling.BlackQueenSide) == Castling.BlackQueenSide && (from.file == 0 && from.rank == 1))
+                        {
+                            Castling = Castling & ~Castling.BlackQueenSide;
+                        }
 
                     }
 
@@ -326,6 +400,17 @@ namespace Karma_Chess
                     Squares[to.file, to.rank] = Squares[from.file, from.rank];
                     Squares[5, from.rank] = Squares[7, from.rank];
                     Squares[7, from.rank] = Pieces.None;
+                }
+
+                //Unset the flags for enpassant
+                var kingColor = Squares[from.file, from.rank] & Pieces.ColorMask;
+                if (kingColor == Pieces.White)
+                {
+                    Castling = Castling & ~(Castling.WhiteKingSide | Castling.WhiteQueenSide);
+                }
+                else
+                {
+                    Castling = Castling & ~(Castling.BlackKingSide | Castling.BlackQueenSide);
                 }
             }
             else if (Special == 1 || Special == 2 || Special == 3 || Special == 4)
@@ -361,9 +446,9 @@ namespace Karma_Chess
                 }
             }
 
-
             IsInCkeck = CkeckIfKingInCheck(Turn.IsWhite() ? WhiteKingPosition : BlackKingPosition, Squares);
 
+            CalcutateScores();
             return true;
         }
 
@@ -1079,6 +1164,8 @@ namespace Karma_Chess
                                     }
                                 }
                                 //Castling
+                                //you can not castle to escape check
+                                if (IsInCkeck) break;
                                 if (Squares[file, rank].IsWhite())
                                 {
                                     if ((Castling & Castling.WhiteKingSide) == Castling.WhiteKingSide
@@ -1229,6 +1316,12 @@ namespace Karma_Chess
                     }
                 }
             }
+
+
+            if (IsInCkeck && LegalMoves.Count == 0)
+            {
+                CheckMate = true;
+            }
         }
         /// <summary>
         /// Returns True if the KingPosition is in check, else false
@@ -1319,7 +1412,7 @@ namespace Karma_Chess
             {
                 if (file + distance > 7) break;
                 if ((!(tempSqares[file + distance, rank] & Pieces.ColorMask).Equals(Turn))
-                    && (tempSqares[file + distance, rank ].IsRook() || tempSqares[file + distance, rank].IsQueen()))
+                    && (tempSqares[file + distance, rank].IsRook() || tempSqares[file + distance, rank].IsQueen()))
                 {
                     return true;
                 }
@@ -1348,7 +1441,7 @@ namespace Karma_Chess
             {
                 if (file - distance < 0) break;
                 if ((!(tempSqares[file - distance, rank] & Pieces.ColorMask).Equals(Turn))
-                    && (tempSqares[file - distance, rank ].IsRook() || tempSqares[file - distance, rank ].IsQueen()))
+                    && (tempSqares[file - distance, rank].IsRook() || tempSqares[file - distance, rank].IsQueen()))
                 {
                     return true;
                 }
@@ -1450,14 +1543,14 @@ namespace Karma_Chess
                 {
                     if (file - 1 > 0)
                     {
-                        if ((tempSqares[file - 1, rank - 1] & Pieces.ColorMask).IsWhite() && tempSqares[file - 1, rank + 1].IsPawn())
+                        if ((tempSqares[file - 1, rank - 1] & Pieces.ColorMask).IsWhite() && tempSqares[file - 1, rank - 1].IsPawn())
                         {
                             return true;
                         }
                     }
                     if (file + 1 < 7)
                     {
-                        if ((tempSqares[file + 1, rank - 1] & Pieces.ColorMask).IsWhite() && tempSqares[file + 1, rank + 1].IsPawn())
+                        if ((tempSqares[file + 1, rank - 1] & Pieces.ColorMask).IsWhite() && tempSqares[file + 1, rank - 1].IsPawn())
                         {
                             return true;
                         }
