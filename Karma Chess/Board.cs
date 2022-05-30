@@ -245,7 +245,7 @@ namespace Karma_Chess
 
         #region Helper Methods
 
-        public (int, int) AlgebircToBoardIndex(string algebircNotation)
+        public (int file, int rank) AlgebircToBoardIndex(string algebircNotation)
         {
             int file = algebircNotation[0] - 97;
             int rank = (int)char.GetNumericValue(algebircNotation[1]) - 1;
@@ -1337,7 +1337,7 @@ namespace Karma_Chess
                 {
                     return true;
                 }
-                else if (!(tempSqares[file - distance, rank - distance] & Pieces.ColorMask).Equals(Turn))
+                else if ((tempSqares[file - distance, rank - distance] & Pieces.ColorMask).Equals(Turn))
                 {
                     break;
                 }
