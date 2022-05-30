@@ -37,6 +37,22 @@ namespace Karma_Chess
 
         private void btBestMove_Click(object sender, EventArgs e)
         {
+            if (board.CheckMate)
+            {
+                // Initializes the variables to pass to the MessageBox.Show method.
+                string message = "CkeckMate!";
+                string caption = "CkeckMate!";
+                MessageBoxButtons buttons = MessageBoxButtons.OK;
+                DialogResult result;
+
+                // Displays the MessageBox.
+                result = MessageBox.Show(message, caption, buttons);
+            }
+            if (tbMove.Text == "")
+            {
+                return;
+            }
+
             MakeBestMove();
         }
 
