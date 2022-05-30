@@ -36,6 +36,9 @@
             this.tbMove = new System.Windows.Forms.TextBox();
             this.btMove = new System.Windows.Forms.Button();
             this.btBestMove = new System.Windows.Forms.Button();
+            this.lbDifficulty = new System.Windows.Forms.Label();
+            this.tbDifficulty = new System.Windows.Forms.TrackBar();
+            ((System.ComponentModel.ISupportInitialize)(this.tbDifficulty)).BeginInit();
             this.SuspendLayout();
             // 
             // lbFen
@@ -94,7 +97,7 @@
             // tbMove
             // 
             this.tbMove.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.tbMove.Location = new System.Drawing.Point(575, 152);
+            this.tbMove.Location = new System.Drawing.Point(575, 171);
             this.tbMove.Name = "tbMove";
             this.tbMove.Size = new System.Drawing.Size(161, 32);
             this.tbMove.TabIndex = 1;
@@ -103,7 +106,7 @@
             // btMove
             // 
             this.btMove.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.btMove.Location = new System.Drawing.Point(742, 152);
+            this.btMove.Location = new System.Drawing.Point(742, 170);
             this.btMove.Name = "btMove";
             this.btMove.Size = new System.Drawing.Size(159, 32);
             this.btMove.TabIndex = 2;
@@ -115,13 +118,34 @@
             // btBestMove
             // 
             this.btBestMove.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.btBestMove.Location = new System.Drawing.Point(575, 190);
+            this.btBestMove.Location = new System.Drawing.Point(575, 224);
             this.btBestMove.Name = "btBestMove";
             this.btBestMove.Size = new System.Drawing.Size(326, 32);
             this.btBestMove.TabIndex = 5;
             this.btBestMove.Text = "Make Best Move";
             this.btBestMove.UseVisualStyleBackColor = true;
             this.btBestMove.Click += new System.EventHandler(this.btBestMove_Click);
+            // 
+            // lbDifficulty
+            // 
+            this.lbDifficulty.AutoSize = true;
+            this.lbDifficulty.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.lbDifficulty.Location = new System.Drawing.Point(626, 120);
+            this.lbDifficulty.Name = "lbDifficulty";
+            this.lbDifficulty.Size = new System.Drawing.Size(42, 25);
+            this.lbDifficulty.TabIndex = 0;
+            this.lbDifficulty.Text = "Diff";
+            // 
+            // tbDifficulty
+            // 
+            this.tbDifficulty.LargeChange = 1;
+            this.tbDifficulty.Location = new System.Drawing.Point(674, 120);
+            this.tbDifficulty.Maximum = 7;
+            this.tbDifficulty.Minimum = 2;
+            this.tbDifficulty.Name = "tbDifficulty";
+            this.tbDifficulty.Size = new System.Drawing.Size(227, 45);
+            this.tbDifficulty.TabIndex = 6;
+            this.tbDifficulty.Value = 3;
             // 
             // Form1
             // 
@@ -130,6 +154,7 @@
             this.BackgroundImage = global::Karma_Chess.Properties.Resources.Chess_Board;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
             this.ClientSize = new System.Drawing.Size(913, 559);
+            this.Controls.Add(this.tbDifficulty);
             this.Controls.Add(this.btBestMove);
             this.Controls.Add(this.cbai);
             this.Controls.Add(this.btEmptyBoard);
@@ -137,10 +162,12 @@
             this.Controls.Add(this.btStartGame);
             this.Controls.Add(this.tbMove);
             this.Controls.Add(this.tbFen);
+            this.Controls.Add(this.lbDifficulty);
             this.Controls.Add(this.lbFen);
             this.Name = "Form1";
             this.Text = "Form1";
             this.Load += new System.EventHandler(this.Form1_Load);
+            ((System.ComponentModel.ISupportInitialize)(this.tbDifficulty)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -156,5 +183,7 @@
         private TextBox tbMove;
         private Button btMove;
         private Button btBestMove;
+        private Label lbDifficulty;
+        private TrackBar tbDifficulty;
     }
 }

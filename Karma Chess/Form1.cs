@@ -76,8 +76,8 @@ namespace Karma_Chess
 
             var moveString = tbMove.Text.ToLower();
 
-            var from = board.AlgebircToBoardIndex(moveString[0..2]);
-            var to = board.AlgebircToBoardIndex(moveString[2..4]);
+            (int file, int rank) from = board.AlgebircToBoardIndex(moveString[0..2]);
+            (int file, int rank) to = board.AlgebircToBoardIndex(moveString[2..4]);
             var special = 0;
             switch (moveString[^1])
             {
@@ -120,7 +120,9 @@ namespace Karma_Chess
             var mm = new MinMax();
 
             board.CalculateLegalMoves();
-            mm.MinMaxFunc(board, 3, int.MinValue, int.MaxValue, true, board.Turn);
+
+            var difficulty = tbDifficulty.Value;
+            mm.MinMaxFunc(board, difficulty, int.MinValue, int.MaxValue, true, board.Turn);
 
             var bestMove = mm.bestMoveMinMix;
             board.Move(bestMove.from, bestMove.to, bestMove.Special);
