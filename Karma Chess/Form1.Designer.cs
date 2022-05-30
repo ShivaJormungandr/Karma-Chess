@@ -38,6 +38,7 @@
             this.btBestMove = new System.Windows.Forms.Button();
             this.lbDifficulty = new System.Windows.Forms.Label();
             this.tbDifficulty = new System.Windows.Forms.TrackBar();
+            this.tbLog = new System.Windows.Forms.RichTextBox();
             ((System.ComponentModel.ISupportInitialize)(this.tbDifficulty)).BeginInit();
             this.SuspendLayout();
             // 
@@ -147,6 +148,14 @@
             this.tbDifficulty.TabIndex = 6;
             this.tbDifficulty.Value = 3;
             // 
+            // tbLog
+            // 
+            this.tbLog.Location = new System.Drawing.Point(575, 451);
+            this.tbLog.Name = "tbLog";
+            this.tbLog.Size = new System.Drawing.Size(326, 96);
+            this.tbLog.TabIndex = 7;
+            this.tbLog.Text = "";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -154,6 +163,7 @@
             this.BackgroundImage = global::Karma_Chess.Properties.Resources.Chess_Board;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
             this.ClientSize = new System.Drawing.Size(913, 559);
+            this.Controls.Add(this.tbLog);
             this.Controls.Add(this.tbDifficulty);
             this.Controls.Add(this.btBestMove);
             this.Controls.Add(this.cbai);
@@ -185,5 +195,6 @@
         private Button btBestMove;
         private Label lbDifficulty;
         private TrackBar tbDifficulty;
+        private RichTextBox tbLog;
     }
 }

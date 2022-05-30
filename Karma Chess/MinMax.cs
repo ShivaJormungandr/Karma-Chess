@@ -85,7 +85,8 @@ namespace Karma_Chess
             if (maximizingPlayer)
             {
                 int maxEval = int.MinValue;
-                foreach (var move in board.LegalMoves)
+                //foreach (var move in board.LegalMoves)
+                Parallel.ForEach(board.LegalMoves, (move, state) =>
                 {
                     var boardClone = board.CopyObject<Board>();
                     _ = boardClone.Move(move.from, move.to, move.Special);
@@ -98,15 +99,16 @@ namespace Karma_Chess
                     }
                     maxEval = Math.Max(maxEval, eval);
                     alpha = Math.Max(alpha, eval);
-                    if (beta <= alpha) break;
-                }
+                    if (beta <= alpha) state.Break();
+                });
                 bestMoveMinMix = bestMove;
                 return maxEval;
             }
             else
             {
                 int minEval = int.MaxValue;
-                foreach (var move in board.LegalMoves)
+                //foreach (var move in board.LegalMoves)
+                Parallel.ForEach(board.LegalMoves, (move, state) =>
                 {
                     var boardClone = board.CopyObject<Board>();
                     _ = boardClone.Move(move.from, move.to, move.Special);
@@ -119,8 +121,8 @@ namespace Karma_Chess
                     }
                     minEval = Math.Min(minEval, eval);
                     beta = Math.Min(beta, eval);
-                    if (beta <= alpha) break;
-                }
+                    if (beta <= alpha) state.Break();
+                });
                 bestMoveMinMix = bestMove;
                 return minEval;
             }

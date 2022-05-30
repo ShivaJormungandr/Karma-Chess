@@ -32,87 +32,104 @@ namespace Karma_Chess
                 //"r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq - "
                 board.FenToBoard(fen);
             }
+            board.CalculateLegalMoves();
             this.DrawBoard(board);
         }
 
         private void btBestMove_Click(object sender, EventArgs e)
         {
-            if (board.CheckMate)
+            try
             {
-                // Initializes the variables to pass to the MessageBox.Show method.
-                string message = "CkeckMate!";
-                string caption = "CkeckMate!";
-                MessageBoxButtons buttons = MessageBoxButtons.OK;
-                DialogResult result;
+                btBestMove.Enabled = false;
+                board.CalculateLegalMoves();
+                if (board.CheckMate || board.LegalMoves.Count == 0)
+                {
+                    // Initializes the variables to pass to the MessageBox.Show method.
+                    string message = "CkeckMate!";
+                    string caption = "CkeckMate!";
+                    MessageBoxButtons buttons = MessageBoxButtons.OK;
+                    DialogResult result;
 
-                // Displays the MessageBox.
-                result = MessageBox.Show(message, caption, buttons);
+                    // Displays the MessageBox.
+                    result = MessageBox.Show(message, caption, buttons);
+                    return;
+                }
+                MakeBestMove();
             }
-            if (tbMove.Text == "")
+            finally
             {
-                return;
+                btBestMove.Enabled = true;
             }
 
-            MakeBestMove();
         }
 
         private void btMove_Click(object sender, EventArgs e)
         {
-            if (board.CheckMate)
+            try
             {
-                // Initializes the variables to pass to the MessageBox.Show method.
-                string message = "CkeckMate!";
-                string caption = "CkeckMate!";
-                MessageBoxButtons buttons = MessageBoxButtons.OK;
-                DialogResult result;
+                btMove.Enabled = false;
+                if (board.CheckMate || board.LegalMoves.Count == 0)
+                {
+                    // Initializes the variables to pass to the MessageBox.Show method.
+                    string message = "CkeckMate!";
+                    string caption = "CkeckMate!";
+                    MessageBoxButtons buttons = MessageBoxButtons.OK;
+                    DialogResult result;
 
-                // Displays the MessageBox.
-                result = MessageBox.Show(message, caption, buttons);
+                    // Displays the MessageBox.
+                    result = MessageBox.Show(message, caption, buttons);
+                    return;
+                }
+
+                if (tbMove.Text == "")
+                {
+                    return;
+                }
+
+                var moveString = tbMove.Text.ToLower();
+
+                (int file, int rank) from = board.AlgebircToBoardIndex(moveString[0..2]);
+                (int file, int rank) to = board.AlgebircToBoardIndex(moveString[2..4]);
+                var special = 0;
+                switch (moveString[^1])
+                {
+                    case 'k':
+                        special = 1;
+                        break;
+                    case 'b':
+                        special = 2;
+                        break;
+                    case 'r':
+                        special = 3;
+                        break;
+                    case 'q':
+                        special = 4;
+                        break;
+                }
+
+                var move = (from, to, special);
+                board.CalculateLegalMoves();
+                if (!board.LegalMoves.Contains(move))
+                {
+                    return;
+                }
+
+                board.Move(from, to, special);
+
+                var pbfrom = GetPictureBox(from.file, from.rank);
+                var pbto = GetPictureBox(to.file, to.rank);
+
+                this.UpdateBoard(board, from, pbfrom, to, pbto);
+                Refresh();
+
+                if (cbai.Checked)
+                {
+                    MakeBestMove();
+                }
             }
-            if (tbMove.Text == "")
+            finally
             {
-                return;
-            }
-
-            var moveString = tbMove.Text.ToLower();
-
-            (int file, int rank) from = board.AlgebircToBoardIndex(moveString[0..2]);
-            (int file, int rank) to = board.AlgebircToBoardIndex(moveString[2..4]);
-            var special = 0;
-            switch (moveString[^1])
-            {
-                case 'k':
-                    special = 1;
-                    break;
-                case 'b':
-                    special = 2;
-                    break;
-                case 'r':
-                    special = 3;
-                    break;
-                case 'q':
-                    special = 4;
-                    break;
-            }
-
-            var move = (from, to, special);
-            board.CalculateLegalMoves();
-            if (!board.LegalMoves.Contains(move))
-            {
-                return;
-            }
-
-            board.Move(from, to, special);
-
-            var pbfrom = GetPictureBox(from.file, from.rank);
-            var pbto = GetPictureBox(to.file, to.rank);
-
-            this.UpdateBoard(board, from, pbfrom, to, pbto);
-            Refresh();
-
-            if (cbai.Checked)
-            {
-                MakeBestMove();
+                btMove.Enabled = true;
             }
         }
         private void MakeBestMove()
@@ -125,7 +142,13 @@ namespace Karma_Chess
             mm.MinMaxFunc(board, difficulty, int.MinValue, int.MaxValue, true, board.Turn);
 
             var bestMove = mm.bestMoveMinMix;
-            board.Move(bestMove.from, bestMove.to, bestMove.Special);
+            var turnWas = board.Turn;
+            var itMoved = board.Move(bestMove.from, bestMove.to, bestMove.Special);
+            if (itMoved)
+            {
+                tbLog.Text = $"{turnWas} moved ({(char)(bestMove.from.file + 65)}, {bestMove.from.rank + 1}) to ({(char)(bestMove.to.file + 65)}, {bestMove.to.rank + 1})";
+            }
+
             if (board.CheckMate)
             {
                 //

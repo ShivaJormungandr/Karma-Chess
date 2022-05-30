@@ -1118,38 +1118,50 @@ namespace Karma_Chess
                                 if (IsInCkeck) break;
                                 if (Squares[file, rank].IsWhite())
                                 {
-                                    if ((Castling & Castling.WhiteKingSide) == Castling.WhiteKingSide
+                                    if (file + 3 < 7)
+                                    {
+                                        if ((Castling & Castling.WhiteKingSide) == Castling.WhiteKingSide
                                         && Squares[file + 1, rank].IsEmpty()
                                         && Squares[file + 2, rank].IsEmpty()
                                         && Squares[file + 3, rank].IsRook())
-                                    {
-                                        LegalMoves.Add(((file, rank), (file + 2, rank), -1));
+                                        {
+                                            LegalMoves.Add(((file, rank), (file + 2, rank), -1));
+                                        }
                                     }
-                                    if ((Castling & Castling.WhiteQueenSide) == Castling.WhiteQueenSide
-                                        && Squares[file - 1, rank].IsEmpty()
-                                        && Squares[file - 2, rank].IsEmpty()
-                                        && Squares[file - 3, rank].IsEmpty()
-                                        && Squares[file - 4, rank].IsRook())
+                                    if (file - 4 > 0)
                                     {
-                                        LegalMoves.Add(((file, rank), (file - 2, rank), -1));
+                                        if ((Castling & Castling.WhiteQueenSide) == Castling.WhiteQueenSide
+                                            && Squares[file - 1, rank].IsEmpty()
+                                            && Squares[file - 2, rank].IsEmpty()
+                                            && Squares[file - 3, rank].IsEmpty()
+                                            && Squares[file - 4, rank].IsRook())
+                                        {
+                                            LegalMoves.Add(((file, rank), (file - 2, rank), -1));
+                                        }
                                     }
                                 }
                                 else if (Squares[file, rank].IsBlack())
                                 {
-                                    if ((Castling & Castling.BlackKingSide) == Castling.BlackKingSide
+                                    if (file + 3 < 7)
+                                    {
+                                        if ((Castling & Castling.BlackKingSide) == Castling.BlackKingSide
                                         && Squares[file + 1, rank].IsEmpty()
                                         && Squares[file + 2, rank].IsEmpty()
                                         && Squares[file + 3, rank].IsRook())
-                                    {
-                                        LegalMoves.Add(((file, rank), (file + 2, rank), -1));
+                                        {
+                                            LegalMoves.Add(((file, rank), (file + 2, rank), -1));
+                                        }
                                     }
-                                    if ((Castling & Castling.BlackQueenSide) == Castling.BlackQueenSide
+                                    if (file - 4 > 0)
+                                    {
+                                        if ((Castling & Castling.BlackQueenSide) == Castling.BlackQueenSide
                                         && Squares[file - 1, rank].IsEmpty()
                                         && Squares[file - 2, rank].IsEmpty()
                                         && Squares[file - 3, rank].IsEmpty()
                                         && Squares[file - 4, rank].IsRook())
-                                    {
-                                        LegalMoves.Add(((file, rank), (file - 2, rank), -1));
+                                        {
+                                            LegalMoves.Add(((file, rank), (file - 2, rank), -1));
+                                        }
                                     }
                                 }
                                 #endregion
